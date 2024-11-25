@@ -256,7 +256,7 @@ def tsne_graph_2d(output, topic_names, doc_names, algorithm):
     topic_weights = np.array(topic_weights)
     tsne_lda = tsne_model.fit_transform(topic_weights)
 
-    fig, ax = plt.subplots(figsize=(12, 8))
+    fig, ax = plt.subplots(figsize=(10, 6))
     for idx, topic in enumerate(topic_names):
         mask = (topic_num == idx)
         ax.scatter(tsne_lda[mask, 0], tsne_lda[mask, 1], label=topic, color=colorArray[idx % len(colorArray)], alpha=0.8, s=50)

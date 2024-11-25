@@ -3,6 +3,7 @@
 {% load static %}
 {% block head %}
     <script type="text/javascript" src="{% static 'js/bokeh-2.0.2.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -34,7 +35,7 @@
                     <div class="col-12">
                         <div class="project-card-no-image">
                             <h3 style="font-size: 24px;">Topic Word Distribution</h3>
-
+    
                             <button type="button" class="btn btn-sm btn-info m-2" data-toggle="collapse"
                                     data-target="#filter">
                                 <i class="icon ion-ios-settings-strong m-1"
@@ -46,8 +47,9 @@
                             <button data-target="#xxx" type="button" class="btn btn-primary" id="set-topic-names"
                             >Edit Topic Names
                             </button>
+                            <button type="button" id="download-topic-distribution" class="btn btn-success">Download as PNG</button>
 
-
+                          <div id="topic-word-distribution">
                             <div id="filter" class="collapse mb-2">
                                 <form class="form-inline m-1 p-3 my-form"
                                       style="box-shadow: none;max-width: none">
@@ -194,9 +196,10 @@
                                     </tbody>
                                 </table>
                             </div>
-
+                          </div>
                         </div>
                     </div>
+                    
                 </div>
             </form>
 
@@ -228,7 +231,7 @@
                                                     class="icon ion-eye-disabled"
                                                     title="Hide"></i></span>
                                         </h3>
-                                       
+                                        <button class="btn btn-primary doc-topic-distribution-download">Download</button>
                                         {% for topic in topic_distribution %}
 
                                             <div class="row">
@@ -279,8 +282,9 @@
                                             2D Graph needs at least 2 topics. You have {{ topic_count }} topic.
                                         {% else %}
                                             LOAD GRAPH
-                                        {% endif %}
+                                        {% endif %}   
                                     </button>
+                                    
                                 </div>
 
                                 <div class="tab-pane container fade" id="graph3d">
@@ -320,6 +324,37 @@
 {% endblock %}
 
 {% block script %}
+<script>
+    // Function to download an element as PNG
+    function downloadAsPNG(elementId) {
+        const element = document.getElementById(elementId);
+        html2canvas(element).then(canvas => {
+            const link = document.createElement('a');
+            link.download = `${elementId}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+
+    // Add event listener for Topic Word Distribution
+    document.getElementById('download-topic-distribution').addEventListener('click', () => {
+        downloadAsPNG('topic-word-distribution');
+    });
+
+    // Document Topic Distribution Download
+    document.querySelectorAll('.doc-topic-distribution-download').forEach(button => {
+        button.addEventListener('click', function () {
+            const docSection = this.closest('.col-md-4');
+            html2canvas(docSection).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'document_topic_distribution.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        });
+    });
+
+</script>
     <script>
         function previewFile(e) {
             var element = $(e);
