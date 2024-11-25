@@ -212,6 +212,7 @@
                         </select>
                         <button class="btn btn-primary" id="documents-add-button">Add</button>
                         <button class="btn btn-danger" id="documents-show-all-button">Show All</button>
+                        <button class="btn btn-secondary" id="documents-hide-all-button">Hide All</button>
                         <br>
                         <br>
                         <div class="row">
@@ -388,6 +389,13 @@
             });
 
 
+        });
+
+        $('#documents-hide-all-button').click(function () {
+            var elements = $('[data-file]');
+            elements.each(function (index, element) {
+            $(this).hide();
+            });
         });
 
         //END DOCUMENT SELECTION
