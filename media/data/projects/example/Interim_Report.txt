@@ -1,0 +1,211 @@
+Employee Attrition Analysis   
+
+Group No: 2 
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+Members: 
+
+  
+
+Kubilay Kürtür 
+
+Ahmet Yiğit Özkoca 
+
+Beyza Akgün 
+
+İlayda Kasapçopur 
+
+  
+
+  
+
+  
+
+  
+
+  
+
+ CMPE 331 Interim Report 
+
+2023 Fall 
+
+                                   
+
+                                  Employee Attrition Prediction 
+
+ 
+
+Progress 
+
+  CORS (Cross-Origin Resource Sharing) was configured for the Flask API. 
+
+  “File corrupted” bug was fixed for excel upload API. 
+
+  Java Spring project was integrated for the back-end of register and login process. 
+
+  A pie chart was designed for the attrition percentage aspect on front-end. 
+
+  Pages of the web application was designed. 
+
+ 
+
+ 
+
+                               Figure 1: Attrition Levels Visualization 
+
+This figure illustrates a dynamic representation of attrition levels sourced from user-uploaded 
+
+data. The data is processed and depicted both as a pie chart and a corresponding percentage on 
+
+the website. The chart provides a visual breakdown of attrition categories, offering stakeholders 
+
+an accessible and insightful overview of the attrition distribution. 
+
+Works Completed 
+
+  A machine learning model was developed. 
+
+  Flask API was developed. 
+
+  Java Spring API was developed. 
+
+  A front-end template was designed. 
+
+  Front-end was made suitable for usage. 
+
+  APIs were integrated to the front-end. 
+
+ 
+
+           
+
+ 
+
+                     
+
+ 
+
+                        Figure 2: User Registration and Login Interfaces 
+
+This figure encapsulates the user interaction process, featuring both the user registration and 
+
+login interfaces. The registration interface (left) facilitates account creation with a user-friendly 
+
+design, while the login interface (right) provides registered users with secure access to the site. 
+
+Together, these interfaces contribute to an intuitive and accessible user experience. 
+
+ 
+
+ 
+
+                       
+
+ 
+
+                         Figure 4: File Upload Interface for Attrition Data 
+
+This figure illustrates the file upload interface, featuring two distinct boxes allowing users to 
+
+seamlessly upload CSV and Excel files containing attrition data. Users can utilize the browse 
+
+section to search for files with the specified format, either CSV or Excel. The system facilitates 
+
+a straightforward file upload process, enabling users to contribute data effortlessly for further 
+
+analysis. 
+
+Information: The accepted file formats attributes for attrition data are clearly indicated at the 
+
+top of the page. 
+
+ 
+
+Works In Progress 
+
+  The machine learning model is being further more optimized to achieve better scores.  
+
+  A details page is being designed for the users. Example file formats for appropriate file 
+
+input and their explanation will be included. 
+
+ 
+
+ 
+
+              
+
+              Figure 5: Detailed Information Page for File Format Guidance 
+
+This figure presents a screenshot capturing the comprehensive information page detailing file 
+
+format guidelines for uploading attrition data. The page provides users with crucial insights, 
+
+specifying the accepted file types (CSV and Excel), the precise order for entering attributes, 
+
+and specific inputs recommended for various attributes. This detailed guidance ensures users 
+
+have  a  clear  understanding  of  the  required  format,  promoting  accurate  and  efficient  data 
+
+uploads. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+Works To Be Done 
+
+  A password pattern will be included in the Java Spring API. 
+
+  Python project will be refactored for a cleaner code. 
+
+  The possible outcomes will be tested manually. 
+
+ 
+
+ 
+
+ 
+
+                      Figure 6: System Verification - Attrition Excel File 
+
+This figure displays of an attrition Excel file used for system verification. The captured image 
+
+serves as a confirmation that the system is processing and handling data correctly. The Excel 
+
+file  showcases  the  organized  structure  of  attrition  data,  reinforcing  the  system's  effective 
+
+functionality in interpreting and managing the provided information. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+ 
+
+
