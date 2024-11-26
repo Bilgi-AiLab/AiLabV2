@@ -40,12 +40,10 @@ def CreateMember(request):
                 )
                 user.save()
                 content['success'] = "Successfully Creating"
-
                 return redirect('login')
-                #return render(request,'registration/login.html',content)
 
         else:
-            content['error'] = "Password doesnot match!"
+            content['error'] = "Password does not match!"
 
     return render(request, 'registration/register.html', content)
 
@@ -68,7 +66,7 @@ def LoginMember(request):
                 if user_password != password:
                     content['error'] = "Password is wrong!"
             else :
-                content['error'] = "There is no like an user!"
+                content['error'] = "There is no such user!"
 
             return render(request, 'registration/login.html', content)
             # return redirect('login')
@@ -91,10 +89,10 @@ def EditProfile(request):
         email = request.POST['email']
 
         if user.username == username:
-            content['error'] = "Username exist"
+            content['error'] = "Username exists"
 
         elif user.email == email:
-            content['error'] = "Email exist"
+            content['error'] = "Email exists"
 
         else:
             user.username = username
@@ -118,13 +116,12 @@ def ResetPassword(request):
         check_password = user.check_password(password1) #True or False
 
         if check_password:
-            content['error'] = "Password Same as before"
+            content['error'] = "Password is the same as before"
         # if user.password == password1 :
         #
         elif password1 != password2:
-            content['error'] = "Password doesnot match!"
+            content['error'] = "Password does not match!"
         else:
-            print("else icindeyim")
             user.set_password(password1)
             user.save()
             user = User.objects.get(username = username)
