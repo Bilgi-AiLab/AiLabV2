@@ -14,6 +14,9 @@ pip install -r requirements.txt
 ```
 python manage.py migrate
 python manage.py collectstatic
+
+Note: If you want to add new features, do these afterwards--> python manage.py makemigrations <the_feature> and then
+python manage.py migrate <the_feature>
 ```
 4. You can run the server now! 
 ```

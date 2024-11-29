@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'project',
     'home',
     'topic_modelling',
+    'sentiment_analysis',
     'document_similarity',
     'document_stats',
     'documentation',

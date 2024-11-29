@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load index %}
+{% load static %}
+{% block head %}
+    <script type="text/javascript" src="{% static 'js/bokeh-2.0.2.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{% endblock %}
+{% block content %}
+<body>
+    <div class="container mt-5">
+        
+
+        <h1 class="mb-4">{{ title }}</h1>
+
+        <!-- Summary -->
+        <div class="mb-4">
+            <h3>Summary</h3>
+            <p><strong>Algorithm:</strong> {{ algorithm|title }}</p>
+            <p><strong>Polarity Value:</strong> {{ report.polarity_value }}</p>
+            <p>
+                <strong>Document Count:</strong>
+                Positive: {{ report.positive_doc_count }},
+                Negative: {{ report.negative_doc_count }},
+                Neutral: {{ report.neutral_doc_count }}
+            </p>
+        </div>
+
+        <!-- Charts -->
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Bar Chart</h4>
+                <div id="bar-chart"></div>
+            </div>
+            <div class="col-md-6">
+                <h4>Pie Chart</h4>
+                <div id="pie-chart"></div>
+            </div>
+        </div>
+
+        <!-- Detailed Scores -->
+        <div class="mt-5">
+            <h3>Detailed Scores</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Text</th>
+                        <th>Compound</th>
+                        <th>Positive</th>
+                        <th>Neutral</th>
+                        <th>Negative</th>
+                        <th>Sentiment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in report.detailed_scores %}
+                        <tr>
+                            <td>{{ score.id }}</td>
+                            <td>{{ score.text }}</td>
+                            <td>{{ score.compound }}</td>
+                            <td>{{ score.positive }}</td>
+                            <td>{{ score.neutral }}</td>
+                            <td>{{ score.negative }}</td>
+                            <td>{{ score.sentiment }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</body>
+{% endblock %}
+{% block script %}
+<script>
+    var barChart = {{ bar_chart|safe }};
+    var pieChart = {{ pie_chart|safe }};
+    Plotly.newPlot('bar-chart', barChart.data, barChart.layout);
+    Plotly.newPlot('pie-chart', pieChart.data, pieChart.layout);
+</script>
+{% endblock %}
