@@ -87,7 +87,10 @@ def apply_topic_algorithm(request, pk, algorithm):
 
         output = {}
         if 'n_topic' in request.POST:
-            n_topic = int(request.POST['n_topic'])
+            try:
+                n_topic = int(request.POST['n_topic'])
+            except:
+                n_topic = str(request.POST['n_topic'])
 
         if algorithm.lower() == 'lda':
             output = LDA(corpus, n_topic)

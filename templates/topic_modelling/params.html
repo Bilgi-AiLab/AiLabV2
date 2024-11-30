@@ -48,7 +48,26 @@
                         </div>
                     </form>
                 </div>
+                {% if algorithm|lower == 'bertopic' %}
+                <div class="project-card-no-image">
+                    <h3 style="font-size: 24px;">Apply auto <span class="text-uppercase">{{ algorithm }}</span></h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <fieldset>
+                                <input type="hidden" value="auto" name="n_topic"/>
+                            </fieldset>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Run</button>
+                        </div>
+                    </form>
 
+                    <div id="tester" style="width:100%;"></div>
+
+
+                </div>
+                {% endif %}
                 {% if algorithm|lower != 'hdp' and algorithm|lower != 'bertopic' %}
                     <div class="project-card-no-image">
                         <h3 style="font-size: 24px;">Explore Optimum Topic Number <span class="text-uppercase">{{ algorithm }}</span></h3>

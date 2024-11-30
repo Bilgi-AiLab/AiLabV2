@@ -54,9 +54,8 @@ def bertopic(corpus, n_topic):
 
     doc_number = len(data_tokens)
     print(f"Documents: {doc_number}")
-    umap_model = UMAP(n_neighbors=5, min_dist=0.1, n_components=2, random_state=42)
-    topic_model = BERTopic(calculate_probabilities=True, min_topic_size=2, umap_model=umap_model, nr_topics=n_topic, top_n_words=15, zeroshot_min_similarity=1.1, embedding_model='all-MiniLM-L6-v2')
-    
+    umap_model = UMAP(n_neighbors=15, min_dist=0.05, n_components=2, random_state=42)
+    topic_model = BERTopic(calculate_probabilities=True, min_topic_size=10, umap_model=umap_model, nr_topics=n_topic, top_n_words=15, zeroshot_min_similarity=0.85, embedding_model='paraphrase-MiniLM-L6-v2')
     topics, probs = topic_model.fit_transform(cleaned_data)
     
     #coherence_model = coherence.coherence_value(model=topic_model, tokens=data_tokens, dictionary=id2word)
