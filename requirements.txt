@@ -67,3 +67,4 @@ emoji
 contractions
 openpyxl
 mpld3
+textblob

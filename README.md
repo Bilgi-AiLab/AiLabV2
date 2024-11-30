@@ -7,7 +7,8 @@ git clone https://github.com/ibrahim-dogan/cmpe-graduation-project.git
 2. Install requirements
 ```
 cd cmpe-graduation-project
-activate --> venv\Scripts\activate
+python -m venv venv
+venv\Scripts\activate
 pip install -r requirements.txt
 ```
 3. Run this commands to initialize DB file

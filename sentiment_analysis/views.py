@@ -7,6 +7,7 @@ from django.urls import reverse
 from sentiment_analysis.models import Report
 from sentiment_analysis.algorithms.vader_web import vader
 from project.models import Project
+from sentiment_analysis.algorithms.textblob_web import textblob
 
 def sentiment_algorithms(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -56,6 +57,9 @@ def apply_sentiment_algorithm(request, pk, algorithm):
         if algorithm.lower() == "vader":
             output = vader(corpus=corpus)
 
+        elif algorithm.lower() == "textblob":
+            output = textblob(corpus=corpus)
+
         content.update(output)
         content["files"] = [file.filename() for file in files]
 
@@ -81,7 +85,7 @@ def view_sentiment_report(request, project_pk, algorithm, report_pk):
     report_output = report.get_output()
     positive_count = report.positive_doc_count()
     negative_count = report.negative_doc_count()
-    neutral_count = report.negative_doc_count()
+    neutral_count = report.neutral_doc_count()
 
     # Create a bar chart using Plotly
     labels = ['Positive', 'Negative', 'Neutral']
