@@ -10,7 +10,7 @@
                     <form method="post">
                         {% csrf_token %}
 
-                        {% if algorithm|lower != 'hdp' and algorithm|lower != 'bertopic' and algorithm|lower != 'w2v-kmeans'%}
+                        {% if algorithm|lower != 'hdp' and algorithm|lower != 'bertopic' and algorithm|lower != 'w2v-kmeans' and algorithm|lower != 'distilbert'%}
                             <div class="form-group">
                                 <fieldset>
                                     <label class="">Number of Topics (min: {{ 1 }}
@@ -33,6 +33,16 @@
                             </div>
                         {% endif %}
                         {% if algorithm|lower == 'bertopic' %}
+                            <div class="form-group">
+                                <fieldset>
+                                    <label class="">Number of Topics</label>
+                                    <input type="number" value="10"
+                                           class="form-control" name="n_topic"/>
+
+                                </fieldset>
+                            </div>
+                        {% endif %}
+                        {% if algorithm|lower == 'distilbert' %}
                             <div class="form-group">
                                 <fieldset>
                                     <label class="">Number of Topics</label>
@@ -68,7 +78,8 @@
 
                 </div>
                 {% endif %}
-                {% if algorithm|lower != 'hdp' and algorithm|lower != 'bertopic' %}
+                
+                {% if algorithm|lower != 'hdp' and algorithm|lower != 'bertopic' and algorithm|lower != 'distilbert' %}
                     <div class="project-card-no-image">
                         <h3 style="font-size: 24px;">Explore Optimum Topic Number <span class="text-uppercase">{{ algorithm }}</span></h3>
 

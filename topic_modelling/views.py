@@ -15,6 +15,7 @@ from topic_modelling.algorithms.nmf_web import NMF, nmf_optimum_coherence
 from topic_modelling.algorithms.topic_graph import tsne_graph_2d, tsne_graph_3d
 from topic_modelling.models import Report
 from topic_modelling.algorithms.bertopic_web import bertopic_coherence, bertopic
+from topic_modelling.algorithms.distilbert_web import distilbert
 
 def topic_algorithms(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -109,7 +110,9 @@ def apply_topic_algorithm(request, pk, algorithm):
 
         elif algorithm.lower() == 'bertopic':
             output = bertopic(corpus, n_topic)
-    
+        
+        elif algorithm.lower() == 'distilbert':
+            output = distilbert(corpus=corpus, n_topic=n_topic)
 
         content.update(output)
         content["files"] = [file.filename() for file in files]

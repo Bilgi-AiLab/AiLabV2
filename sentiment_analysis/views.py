@@ -8,6 +8,7 @@ from sentiment_analysis.models import Report
 from sentiment_analysis.algorithms.vader_web import vader
 from project.models import Project
 from sentiment_analysis.algorithms.textblob_web import textblob
+from sentiment_analysis.algorithms.distilbert_web import distilbert
 
 def sentiment_algorithms(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -59,6 +60,9 @@ def apply_sentiment_algorithm(request, pk, algorithm):
 
         elif algorithm.lower() == "textblob":
             output = textblob(corpus=corpus)
+
+        elif algorithm.lower() == "distilbert":
+            output = distilbert(corpus=corpus)
 
         content.update(output)
         content["files"] = [file.filename() for file in files]
