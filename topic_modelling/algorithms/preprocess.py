@@ -4,13 +4,16 @@ from nltk.tokenize import RegexpTokenizer
 import gensim
 from topic_modelling.algorithms.pos_tagger import tag
 import os
+import contractions
 
 def preprocess(corpus):
     file = open(f"{os.path.dirname(__file__)}/turkce-stop-words.txt")
     stops = file.readlines()
     replace_with_space = re.compile('[/(){}\[\]\|@,;]')
     remove_symbols1 = re.compile("[^0-9a-z_ğüşıöç .']")
-    stopwords = nltk.corpus.stopwords.words('turkish', 'english')
+    remove_urls = re.compile(r'http[s]?://\S+|www\.\S+')
+    remove_mentions_and_hashtags = re.compile(r'[@#]\w+')
+    stopwords = nltk.corpus.stopwords.words('english') + nltk.corpus.stopwords.words('turkish')
     stopwords.extend(stops)
     remove_3chars = re.compile(r'\b\w{1,3}\b')
 
@@ -21,6 +24,8 @@ def preprocess(corpus):
             return: modified initial string
         """
         valid_characters = 'abcçdefgğhıijklmnoöpqrsştuüvwxyzQWERTYUIOPĞÜASDFGHJKLŞİZXCVBNMÖÇ1234567890 '
+        text = remove_urls.sub('', text)
+        text = contractions.fix(text)
         text = ''.join([x for x in text if x in valid_characters])
         text = " ".join([word_tag[0] for word_tag in list(tag(text)) if word_tag[1]=='Noun_Nom' or word_tag[1]=='Adj'])
         lower_map = {
@@ -33,8 +38,8 @@ def preprocess(corpus):
         }
         text = text.translate(lower_map)
         text = text.lower()
-        #text = replace_with_space.sub(' ', text)
-        #text = remove_symbols1.sub('', text)
+        text = replace_with_space.sub(' ', text)
+        text = remove_symbols1.sub('', text)
         text = remove_3chars.sub('', text)
         text = ' '.join([word for word in text.split() if word not in stopwords])
         return text

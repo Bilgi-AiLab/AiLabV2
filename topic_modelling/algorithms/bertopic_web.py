@@ -1,9 +1,8 @@
 from bertopic import BERTopic
 from gensim.models import CoherenceModel
-from topic_modelling.algorithms import preprocess
 import plotly.graph_objects as go
 from umap import UMAP
-from topic_modelling.algorithms import distributions, preprocess, coherence, topic_distance
+from topic_modelling.algorithms import distributions, preprocess_bert, preprocess, coherence, topic_distance
 from gensim.corpora import Dictionary
 
 '''
@@ -14,7 +13,7 @@ data-driven approach to identify themes in your data.
 '''
 
 def bertopic_coherence(corpus, start, end, step):
-    cleaned_data, data_tokens, id2word, corpus = preprocess.preprocess(corpus=corpus)
+    cleaned_data, data_tokens, id2word, corpus = preprocess_bert.preprocess(corpus=corpus)
 
     if not cleaned_data:
         raise ValueError("The cleaned data is empty. Please check the preprocessing steps.")
@@ -48,7 +47,7 @@ def bertopic_coherence(corpus, start, end, step):
     return fig
 
 def bertopic(corpus, n_topic):
-    cleaned_data, data_tokens, id2word, corpus = preprocess.preprocess(corpus=corpus)
+    cleaned_data, data_tokens, id2word, corpus = preprocess_bert.preprocess(corpus=corpus)
     if not cleaned_data:
         raise ValueError("The cleaned data is empty. Please check the preprocessing steps.")
 

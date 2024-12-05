@@ -1,4 +1,4 @@
-from topic_modelling.algorithms import  preprocess
+from topic_modelling.algorithms import  preprocess, preprocess_bert
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
@@ -10,7 +10,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 
 def distilbert(corpus, n_topic):
     # Preprocess text using the given preprocess function
-    cleaned_data, data_tokens, id2word, corpus = preprocess.preprocess(corpus=corpus)
+    cleaned_data, data_tokens, id2word, corpus = preprocess_bert.preprocess(corpus=corpus)
     if not cleaned_data:
         raise ValueError("The cleaned data is empty. Please check the preprocessing steps.")
 
