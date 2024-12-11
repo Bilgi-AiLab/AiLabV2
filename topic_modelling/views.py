@@ -16,6 +16,7 @@ from topic_modelling.algorithms.topic_graph import tsne_graph_2d, tsne_graph_3d
 from topic_modelling.models import Report
 from topic_modelling.algorithms.bertopic_web import bertopic_coherence, bertopic
 from topic_modelling.algorithms.distilbert_web import distilbert
+from topic_modelling.algorithms.top2vec_web import Top2Vec, top2vec_coherence, Top2Vec_Model
 
 def topic_algorithms(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -80,7 +81,10 @@ def apply_topic_algorithm(request, pk, algorithm):
                 fig = kmeans_optimum_value(corpus, start, end, step)
 
             elif algorithm.lower() == 'bertopic':
-                fig = bertopic_coherence(corpus, start, end, step)    
+                fig = bertopic_coherence(corpus, start, end, step)
+
+            elif algorithm.lower() == 'top2vec':
+                fig = top2vec_coherence(corpus, start, end, step)    
 
             content["data"] = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -113,6 +117,9 @@ def apply_topic_algorithm(request, pk, algorithm):
         
         elif algorithm.lower() == 'distilbert':
             output = distilbert(corpus=corpus, n_topic=n_topic)
+
+        elif algorithm.lower() == 'Top2Vec':
+            output = Top2Vec_Model(corpus)
 
         content.update(output)
         content["files"] = [file.filename() for file in files]

@@ -68,3 +68,4 @@ contractions
 openpyxl
 mpld3
 textblob
+top2vec

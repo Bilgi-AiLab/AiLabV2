@@ -184,11 +184,6 @@ def kmeans_2d_graph(doc_vectors, topic_names, doc_names, colorArrayy, labels, da
     return file_html(plot, CDN, "tsne_lda_graph")
 
 def tsne_graph_2d(output, topic_names, doc_names, algorithm):
-    import plotly.express as px
-    import numpy as np
-    from sklearn.manifold import TSNE
-    import pandas as pd
-    from collections import Counter
 
     colorArray = [
         "#63b598", "#ce7d78", "#ea9e70", "#0d5ac1",
