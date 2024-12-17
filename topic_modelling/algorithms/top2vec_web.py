@@ -1,85 +1,55 @@
 from top2vec import Top2Vec
-from topic_modelling.algorithms import preprocess, coherence
-import plotly.graph_objects as go
+from gensim.models import CoherenceModel
+from topic_modelling.algorithms import preprocess_top2vec
+import numpy as np
 
+def top2vec(corpus):
+    cleaned_data, data_tokens, id2word, corpus = preprocess_top2vec.preprocess(corpus=corpus)
+    if not cleaned_data:
+        raise ValueError("The cleaned data is empty. Please check the preprocessing steps.")
+    
+    doc_ids = [i for i in range(len(cleaned_data))]  
+    
+    print("Fitting Top2Vec model...")
+    model = Top2Vec(documents=cleaned_data, embedding_model='all-MiniLM-L6-v2', speed='deep-learn', workers=4, document_ids=doc_ids, contextual_top2vec=True, min_count=5)
+    
+    topics_words, word_scores, topic_nums = model.get_topics()
+    topic_sizes, topic_nums = model.get_topic_sizes()
 
-def top2vec_coherence(corpus, embedding_model='universal-sentence-encoder'):
-    # Veri ön işleme
-    cleaned_data, data_tokens, id2word, corpus = preprocess.preprocess(corpus=corpus)
-    
-    # Top2Vec modelini eğit
-    model = Top2Vec(
-        documents=cleaned_data,
-        embedding_model=embedding_model,
-        speed="fast-learn",
-        workers=4  # Paralel işlem için
-    )
-    
-    # Konuları ve anahtar kelimeleri al
-    topic_words, word_scores, topic_nums, topic_scores = [], [], [], []
-    num_topics = model.get_num_topics()
+    word_distributions = []
+    for words, scores in zip(topics_words, word_scores):
+        word_dist = []
+        for word, score in zip(words, scores):
+            word_dist.append((word,score))
+        word_distributions.append(word_dist)
 
-    for topic_num in range(num_topics):
-        words, scores, docs, doc_scores = model.get_topic(topic_num)
-        topic_words.append(words)
-        word_scores.append(scores)
-        topic_nums.append(topic_num)
-        topic_scores.append(doc_scores.mean())  # Ortalama skor
+    doc_topic=model.get_document_topic_relevance()
     
-    # Coherence Score Hesaplama
-    coh_score = coherence.coherence_value(
-        model=model, 
-        tokens=data_tokens, 
-        dictionary=id2word
-    )
+    topic_distributions = []
+    for document_id, scores in enumerate(doc_topic):
+        topic_distribution = [
+            [topic_idx, score] for topic_idx, score in enumerate(scores)
+        ]
+        topic_distributions.append(topic_distribution)
     
-    return {
-        "topic_words": topic_words,
-        "word_scores": word_scores,
-        "topic_nums": topic_nums,
-        "coherence_score": coh_score,
-        "topic_scores": topic_scores
-    }
+    valid_topics = {int(topic) for topic in set(topic_nums)}
+    doc_dist = {topic: [] for topic in set(valid_topics)}
 
-
-def Top2Vec_Model(corpus, embedding_model='universal-sentence-encoder'):
-    # Veri ön işleme
-    cleaned_data, data_tokens, id2word, corpus = preprocess.preprocess(corpus=corpus)
+    for doc_id, relevance_scores in enumerate(doc_topic):
+        most_relevant_topic = np.argmax(relevance_scores)
+        doc_dist[most_relevant_topic].append(doc_ids[doc_id]) 
     
-    # Modeli oluştur ve eğit
-    model = Top2Vec(
-        documents=cleaned_data,
-        embedding_model=embedding_model,
-        speed="fast-learn",
-        workers=4
-    )
     
-    # Konular ve Anahtar Kelimeler
-    topics, topic_scores, doc_topics, doc_scores = model.get_topics()
+    top2vec_topics = [[word[0] for word in topic] for topic in word_distributions]
+    coherence_model = CoherenceModel(topics=top2vec_topics, texts=data_tokens, dictionary=id2word, coherence='c_v').get_coherence()
     
-    # Konu Kelime Dağılımları
-    word_distributions = {f"Topic {i+1}": topic for i, topic in enumerate(topics)}
-    
-    # Coherence Score
-    coh_score = coherence.coherence_value(
-        model=model,
-        tokens=data_tokens,
-        dictionary=id2word
-    )
-    
-    # Çıktılar
     output = {
-        "filecount": len(data_tokens),
-        "coherence_value": coh_score,
-        "topics": topics,
-        "topic_scores": topic_scores,
-        "doc_topics": doc_topics,
-        "doc_scores": doc_scores,
+        "filecount":  len(data_tokens),
+        "coherence_value": float(coherence_model),
+        "word_distributions": word_distributions,
+        "topic_distributions": topic_distributions, 
+        "doc_dist": doc_dist, 
         "data_tokens": data_tokens,
-        "word_distributions": word_distributions  # Bu eklendi
     }
-    print("DEBUG: Top2Vec_Model'den dönen output:")
-    print(output)
-    return output
-
     
+    return output

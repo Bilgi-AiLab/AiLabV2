@@ -3,22 +3,61 @@
 {% block style %}
 
     <style>
+    .grid-container {
+            display: grid; /* Grid yapısını başlat */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Kartları esnek hale getir */
+            gap: 20px; /* Grid öğeleri arasındaki boşluk */
+    }
 
-        .card {
-            transition: background, color 200ms, 200ms; /* For modern browsers */
-            background: white;
-            color: #0ea0ff;
+    .card {
+        transition: all 0.3s ease-in-out; /* Tüm geçişlere yumuşak animasyon ekle */
+        background: white;
+        width: 70%;
+        height: 90%; /* Yüksekliği artır */
+        overflow: hidden;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 12px; /* Yuvarlak köşeler */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+    }
 
-        }
+    .card:hover {
+        border-width: 1px 1px 1px 10px;
+        border-left-color: #0C8CDF;/* Daha yoğun gölge */
+        background: #0ea0ff;
+        color: white !important;
+        cursor: pointer;
+    }
 
-        .card:hover {
-            border-width: 1px 1px 1px 10px;
-            background: #0ea0ff;
-            color: white !important;
-            cursor: pointer;
-        }
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 20px;
+    }
 
-    </style>
+    .card h1 {
+        font-size: 20px; /* Daha büyük yazı boyutu */
+        margin: 0;
+        color: #0ea0ff; /* Varsayılan koyu renk */
+    }
+
+    .card:hover h1 {
+        color: white; /* Hover sırasında yazı rengini beyaz yap */
+    }
+
+    .row {
+        gap: 20px; /* Kartlar arasındaki mesafeyi artır */
+    }
+
+    .container h3 {
+        font-size: 26px; /* Başlıkları büyüt */
+        margin-bottom: 30px;
+        color: #555;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -75,7 +114,6 @@
                             </div>
                         </div>
 
-
                     </div>
 
 
@@ -90,7 +128,3 @@
         </section>
     </main>
 {% endblock %}
-
-
-
-

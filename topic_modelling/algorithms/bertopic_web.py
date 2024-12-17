@@ -78,6 +78,7 @@ def bertopic(corpus, n_topic):
     topic_distributions.append(topic_dist)
     '''
     topic_distributions = []
+    
     for document_idx, document_probs in enumerate(probs):
         topic_distribution = [
             [topic_idx, prob] for topic_idx, prob in enumerate(document_probs) if prob > 0
