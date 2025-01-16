@@ -2,3 +2,5 @@
 trmodel
 .idea/
 venv/
+tokenizer_distilbert/
+trained_distilbert/
