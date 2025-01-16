@@ -54,7 +54,7 @@
                 </thead>
                 <tbody>
                     {% for score in report.detailed_scores %}
-                        <tr>
+                        <tr class="{% if score.sentiment == 'Positive' %}table-success{% elif score.sentiment == 'Neutral' %}table-warning{% else %}table-danger{% endif %}">
                             <td>{{ score.id }}</td>
                             <td>{{ score.text }}</td>
                             <td>{{ score.compound }}</td>
@@ -67,7 +67,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
     
 </body>
 {% endblock %}
