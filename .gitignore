@@ -2,5 +2,6 @@
 trmodel
 .idea/
 venv/
-tokenizer_distilbert/
 trained_distilbert/
+tokenizer_distilbert/
+db.sqlite3

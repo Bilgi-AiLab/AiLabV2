@@ -2,8 +2,7 @@ from transformers import pipeline, AutoModelForSequenceClassification, AutoToken
 from sentiment_analysis.algorithms.preprocess import preprocess_text
 
 def distilbert(corpus):
-    # Initialize Hugging Face sentiment analysis pipeline
-    #sentiment_analyzer = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+    
     model = AutoModelForSequenceClassification.from_pretrained("./trained_distilbert")
     tokenizer = AutoTokenizer.from_pretrained("./tokenizer_distilbert")
     sentiment_analyzer = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer) #0.83 accuracy
