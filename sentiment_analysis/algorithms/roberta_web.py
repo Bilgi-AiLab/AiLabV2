@@ -1,9 +1,11 @@
-from transformers import pipeline
+from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
 from sentiment_analysis.algorithms.preprocess import preprocess_text
 
 def roberta(corpus):
     # Initialize Hugging Face sentiment analysis pipeline with RoBERTa
-    sentiment_analyzer = pipeline("sentiment-analysis", model="cardiffnlp/twitter-roberta-base-sentiment")
+    model = AutoModelForSequenceClassification.from_pretrained("cardiffnlp/twitter-roberta-base-sentiment-latest")
+    tokenizer = AutoTokenizer.from_pretrained("cardiffnlp/twitter-roberta-base-sentiment-latest")
+    sentiment_analyzer = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
 
     # Initialize counters and accumulators
     negative_doc_count = 0
@@ -20,13 +22,13 @@ def roberta(corpus):
         result = sentiment_analyzer(cleaned_text)[0]  # Analyze sentiment
         label = result['label']  # Get sentiment label (e.g., Positive, Negative, Neutral)
         score = result['score']  # Get confidence score
-
+        
         # Convert labels to numerical polarity for consistency
-        if label == "LABEL_2":  # Positive
+        if label == "positive":  # Positive
             polarity = score
             sentiment = "Positive"
             positive_doc_count += 1
-        elif label == "LABEL_0":  # Negative
+        elif label == "negative":  # Negative
             polarity = -score
             sentiment = "Negative"
             negative_doc_count += 1

@@ -34,8 +34,8 @@ def preprocess(corpus):
         """
         valid_characters = 'abcçdefgğhıijklmnoöpqrsştuüvwxyzQWERTYUIOPĞÜASDFGHJKLŞİZXCVBNMÖÇ1234567890 '
         text = remove_urls.sub('', text)
-        #text = remove_mentions_and_hashtags.sub('', text)
-        text = remove_hastags.sub('', text)
+        text = remove_mentions_and_hashtags.sub('', text)
+        #text = remove_hastags.sub('', text)
         text = contractions.fix(text)
         text = ''.join([x for x in text if x in valid_characters])
         lemmatizer = WordNetLemmatizer()
