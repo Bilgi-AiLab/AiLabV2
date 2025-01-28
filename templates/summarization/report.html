@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load index %}
+{% load static %}
+{% block head %}
+    <script type="text/javascript" src="{% static 'js/bokeh-2.0.2.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+{% endblock %}
+{% block content %}
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ algorithm.upper }} Text Summarization Report</h1>
+            <p>Project: {{ project.title }}</p>
+        </div>
+        <div class="output-section">
+            <h2>Generated Summary</h2>
+            <p>
+                {{ summary }}
+            </p>
+        </div>
+        <div class="output-section">
+            <h2>SummaC Faithfulness Score</h2>
+            <div class="score">
+                Faithfulness Score: {{ summac_score }}
+            </div>
+        </div>
+        <div class="footer">
+            <p>Powered by PEGASUS and SummaC</p>
+        </div>
+    </div>
+</body>
+{% endblock %}
+{% block style %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .header h1 {
+        font-size: 28px;
+        margin: 0;
+        color: #0078D7;
+    }
+    .header p {
+        font-size: 16px;
+        color: #666;
+    }
+    .output-section {
+        margin: 20px 0;
+    }
+    .output-section h2 {
+        font-size: 20px;
+        color: #444;
+        border-left: 5px solid #0078D7;
+        padding-left: 10px;
+        margin: 15px 0;
+    }
+    .output-section p {
+        font-size: 16px;
+        line-height: 1.6;
+        background: #f4f4f4;
+        padding: 15px;
+        border-radius: 5px;
+    }
+    .output-section .score {
+        font-size: 18px;
+        font-weight: bold;
+        color: #444;
+        background: #eaf7ea;
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+    }
+    .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #999;
+        margin-top: 20px;
+    }
+    @media (max-width: 600px) {
+        .container {
+            padding: 15px;
+        }
+        .header h1 {
+            font-size: 24px;
+        }
+        .output-section h2 {
+            font-size: 18px;
+        }
+    }
+</style>
+{% endblock %}

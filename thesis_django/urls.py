@@ -24,6 +24,7 @@ urlpatterns = [
                   path('projects/', include('project.urls')),
                   path('projects/', include('topic_modelling.urls')),
                   path('projects/', include('sentiment_analysis.urls')),
+                  path('projects/', include('summarization.urls')),
                   path('projects/', include('document_similarity.urls')),
                   path('projects/', include('document_stats.urls')),
                   path('documentation/', include('documentation.urls')),
