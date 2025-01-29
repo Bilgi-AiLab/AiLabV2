@@ -1,8 +1,5 @@
 import re
 import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import sent_tokenize, word_tokenize
-from transformers import AutoTokenizer
 import os
 
 # Download NLTK data (if not already done)

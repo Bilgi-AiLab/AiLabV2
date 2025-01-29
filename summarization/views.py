@@ -82,14 +82,14 @@ def view_summarization_report(request, project_pk, algorithm, report_pk):
     # Extract data from the report
     report_output = report.get_output()
     summary = report.summary()
-    summac_score = report.summac_score()
+    bert_score = report.bert_score()
     # Add data to the content dictionary
     content = {
         'project': project,
         'algorithm': algorithm,
         'files': [file.filename() for file in files],
         'summary': summary,
-        'summac_score': summac_score,
+        'bert_score': bert_score,
         'report': report,
         'title': f'{algorithm.upper()} Report - {project.title}',
     }

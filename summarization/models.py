@@ -15,9 +15,9 @@ class Report(models.Model):
         return json.loads(self.all_data)
 
 
-    def summac_score(self):
+    def bert_score(self):
         try:
-            return self.get_output()["summac_score"]
+            return self.get_output()["bert_score"]
         except KeyError:
             return None
     

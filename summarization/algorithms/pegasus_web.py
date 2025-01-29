@@ -1,29 +1,21 @@
 from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 from summarization.algorithms.preprocessing import preprocess_text
-from summac.model_summac import SummaCZS
+from bert_score import score
+import os
 
 def pegasus(text, num_beams=5):
-    """
-    Summarize text using the PEGASUS model.
-
-    Args:
-        text (str): The input text to summarize.
-        model_name (str): The pre-trained PEGASUS model to use.
-        max_length (int): Maximum length of the summary.
-        min_length (int): Minimum length of the summary.
-        num_beams (int): Number of beams for beam search (higher gives better quality but slower).
-
-    Returns:
-        str: Generated summary.
-    """
-    # Load the tokenizer and model
+    
+    #os.environ["WANDB_DISABLED"] = "true"
+    #os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
+    
     model_name="google/pegasus-xsum"
+    device = "cuda"
     tokenizer = PegasusTokenizer.from_pretrained(model_name)
-    model = PegasusForConditionalGeneration.from_pretrained(model_name)
+    model = PegasusForConditionalGeneration.from_pretrained(model_name).to(device)
 
     texts =[ preprocess_text(txt) for txt in text]
     # Tokenize the input text
-    inputs = tokenizer(texts, max_length=1024, truncation=True, return_tensors="pt")
+    inputs = tokenizer(texts, max_length=1024, truncation=True, padding=True, return_tensors="pt").to(device)
     
     # Generate the summary
     summary_ids = model.generate(
@@ -38,13 +30,12 @@ def pegasus(text, num_beams=5):
     # Decode the generated tokens to text
     summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
 
-    summac_model = SummaCZS(granularity="sentence", model_name="vitc") 
-    evaluation_result = summac_model.score([{"text": text, "summary": summary}])
-    summac_score = evaluation_result["scores"][0]
+    P, R, F1 = score([summary], [text], lang="en", model_type="roberta-large")
+    bertscore_f1 = F1.mean().item()
 
     output = {
         "summary": summary,
-        "summac_score": summac_score
+        "bert_score": bertscore_f1
     }
 
     return output
