@@ -7,6 +7,10 @@ from django.urls import reverse
 from summarization.models import Report
 from project.models import Project
 from summarization.algorithms.pegasus_web import pegasus
+from summarization.algorithms.bart_web import bart
+from summarization.algorithms.t5_web import t5
+from summarization.algorithms.brio_web import brio
+from summarization.algorithms.prophetnet_web import prophetnet
 
 def summarization_algorithms(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -56,6 +60,18 @@ def apply_summarization_algorithm(request, pk, algorithm):
         output = {}
         if algorithm.lower() == "pegasus":
             output = pegasus(corpus)
+
+        elif algorithm.lower() == "bart":
+            output = bart(corpus)
+
+        elif algorithm.lower() == "t5":
+            output = t5(corpus)
+
+        elif algorithm.lower() == "brio":
+            output = brio(corpus)
+
+        elif algorithm.lower() == "prophetnet":
+            output = prophetnet(corpus)
 
 
         content.update(output)
