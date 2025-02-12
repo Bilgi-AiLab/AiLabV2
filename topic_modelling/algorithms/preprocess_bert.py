@@ -8,6 +8,8 @@ from nltk.corpus import wordnet
 import emoji
 import contractions
 
+nltk.download("stopwords")
+
 def preprocess(corpus):
     file = open(f"{os.path.dirname(__file__)}/turkce-stop-words.txt")
     stops = [line.strip() for line in file.readlines()]

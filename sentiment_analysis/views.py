@@ -11,6 +11,8 @@ from sentiment_analysis.algorithms.textblob_web import textblob
 from sentiment_analysis.algorithms.distilbert_web import distilbert
 from sentiment_analysis.algorithms.roberta_web import roberta
 from sentiment_analysis.algorithms.berturk_web import berturk
+import pandas as pd
+from io import BytesIO
 
 def sentiment_algorithms(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -172,3 +174,36 @@ def remove_sentiment_report(request, project_pk, algorithm, report_pk):
     report.delete()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def download_excel(request, project_pk, algorithm, report_pk):
+    project = get_object_or_404(Project, pk=project_pk)
+    report = get_object_or_404(Report, pk=report_pk, algorithm=algorithm.lower())
+    detailed_scores = report.detailed_scores()
+
+    # Ensure detailed_scores is valid
+    if not detailed_scores:
+        return HttpResponse("No data available", content_type="text/plain")
+
+    # Convert JSON string to a list if necessary
+    if isinstance(detailed_scores, str):
+        try:
+            detailed_scores = json.loads(detailed_scores)
+        except json.JSONDecodeError:
+            return HttpResponse("Invalid JSON format", content_type="text/plain")
+
+    # Convert the detailed scores to a DataFrame
+    df = pd.DataFrame(detailed_scores)
+
+    # Create an Excel file in memory
+    output = BytesIO()
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        df.to_excel(writer, index=False, sheet_name="Detailed Scores")
+
+    output.seek(0)
+
+    # Create HTTP response
+    response = HttpResponse(output.read(), content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = 'attachment; filename="detailed_scores.xlsx"'
+    
+    return response
+    

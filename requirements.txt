@@ -70,3 +70,5 @@ mpld3
 textblob
 top2vec
 bert_score
+xlsxwriter
+

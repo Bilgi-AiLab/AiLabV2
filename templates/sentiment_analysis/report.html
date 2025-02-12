@@ -39,6 +39,7 @@
 
         <!-- Detailed Scores -->
         <div class="mt-5">
+            <a href="{% url 'download_excel' report.project.id report.algorithm report.id %}" class="btn btn-success mb-3" id="downloadLink">Download Excel</a>
             <h3>Detailed Scores</h3>
             <table class="table table-striped">
                 <thead>
@@ -76,5 +77,28 @@
     var pieChart = {{ pie_chart|safe }};
     Plotly.newPlot('bar-chart', barChart.data, barChart.layout);
     Plotly.newPlot('pie-chart', pieChart.data, pieChart.layout);
+
+    document.getElementById('downloadLink').addEventListener('click', function(event) {
+        event.preventDefault();  // Prevent default click behavior (i.e., following the link)
+        
+        // Open the download link in a new tab/window
+        var downloadUrl = this.href;
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', downloadUrl, true);
+        xhr.responseType = 'blob';
+
+        xhr.onload = function() {
+            var blob = xhr.response;
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "detailed_scores.xlsx";  // File name
+            link.click();
+
+            // Redirect after download
+            window.location.href = "{% url 'view_sentiment_report' project.pk algorithm report.pk %}";
+        };
+        
+        xhr.send();
+    });
 </script>
 {% endblock %}
