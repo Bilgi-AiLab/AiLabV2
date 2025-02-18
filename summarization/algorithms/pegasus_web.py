@@ -43,68 +43,81 @@ def pegasus(text, num_beams=5):
 
     return output
 '''
-
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
-torch.cuda.empty_cache()
-gc.collect()
-
-def clear_memory():
-    gc.collect()
-    torch.cuda.empty_cache()
-
-def batch(iterable, n=1):
-    length = len(iterable)
-    for ndx in range(0, length, n):
-        yield iterable[ndx:min(ndx + n, length)]
-
-def pegasus(texts, num_beams=5, batch_size=8):
-    # Preprocess texts
-    processed_texts = [preprocess_text(txt) for txt in texts]
-
+def pegasus(text, num_beams=5):
+    # Initialize model and tokenizer
     model_name = "google/pegasus-xsum"
     device = "cuda" if torch.cuda.is_available() else "cpu"
-
-    # Load model and tokenizer in evaluation mode
     tokenizer = PegasusTokenizer.from_pretrained(model_name)
     model = PegasusForConditionalGeneration.from_pretrained(model_name).to(device)
-    model.eval()
 
-    # Process text in batches
-    summaries = []
-    for text_batch in batch(processed_texts, batch_size):
-        try:
-            inputs = tokenizer(text_batch, max_length=512, truncation=True, padding=True, return_tensors="pt").to(device)
-            torch.cuda.empty_cache()
-            # Use mixed precision (float16) for better memory handling
-            with torch.no_grad():
-                summary_ids = model.generate(
-                    inputs["input_ids"],
-                    max_length=60,
-                    min_length=10,
-                    length_penalty=2.0,
-                    num_beams=num_beams,
-                    early_stopping=True
-                )
+    processed_tweets = [preprocess_text(txt) for txt in text]
 
-            summaries.extend([tokenizer.decode(s, skip_special_tokens=True) for s in summary_ids])
+    def create_dynamic_chunks(tweets, max_tokens=512):
+        chunks = []
+        current_chunk = []
+        current_length = 0
 
-            # Clear GPU memory after each batch
-            clear_memory()
-        except torch.cuda.OutOfMemoryError:
-            print("Out of memory in batch processing. Reducing batch size...")
-            clear_memory()
-            return {"summary": "Failed due to memory issues", "bert_score": 0.0}
+        for tweet in tweets:
+            tweet_length = len(tokenizer.encode(tweet, add_special_tokens=False))
 
-    # Combine all batch summaries into a single summary
-    combined_summary = " ".join(summaries)
+            if current_length + tweet_length > max_tokens:
+                chunks.append(" ".join(current_chunk))
+                current_chunk = [tweet]
+                current_length = tweet_length
+            else:
+                current_chunk.append(tweet)
+                current_length += tweet_length
 
-    # Evaluate with BERTScore
-    P, R, F1 = score([combined_summary], [" ".join(processed_texts)], lang="en", model_type="roberta-large")
+        if current_chunk:
+            chunks.append(" ".join(current_chunk))
+        return chunks
+
+
+    chunks = create_dynamic_chunks(processed_tweets)
+
+    chunk_summaries = []
+    for chunk in chunks:
+        inputs = tokenizer(chunk, max_length=512, truncation=True, return_tensors="pt").to(device)
+
+        chunk_length = len(inputs["input_ids"][0])
+        max_summary_len = min(100, int(chunk_length * 0.2))  # 20% of chunk length
+
+        
+        summary_ids = model.generate(
+            inputs["input_ids"],
+            max_length=max_summary_len,
+            min_length=10,
+            length_penalty=1.5,
+            num_beams=num_beams,
+            early_stopping=True
+        )
+
+        chunk_summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+        chunk_summaries.append(chunk_summary)
+
+    
+    combined_text = " ".join(chunk_summaries)
+    inputs = tokenizer(combined_text, max_length=512, truncation=True, return_tensors="pt").to(device)
+
+    final_summary_ids = model.generate(
+        inputs["input_ids"],
+        max_length=100,
+        min_length=20,
+        length_penalty=1.5,
+        num_beams=num_beams,
+        early_stopping=True
+    )
+
+    final_summary = tokenizer.decode(final_summary_ids[0], skip_special_tokens=True)
+
+    original_text = " ".join(processed_tweets)
+    P, R, F1 = score([final_summary], [original_text], lang="en", model_type="roberta-large")
+    bertscore_f1 = F1.mean().item()
 
     output = {
-        "summary": combined_summary,
-        "bert_score": F1.mean().item()
+        "summary": final_summary,
+        "bert_score": bertscore_f1
     }
 
-    clear_memory()  # Final memory cleanup
+    torch.cuda.empty_cache()
     return output
