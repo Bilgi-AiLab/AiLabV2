@@ -51,7 +51,7 @@ def bart(text, num_beams=5):
 
     processed_tweets = [preprocess_text(txt) for txt in text]
 
-    def create_dynamic_chunks(tweets, max_tokens=512):
+    def create_dynamic_chunks(tweets, max_tokens=1024):
         chunks = []
         current_chunk = []
         current_length = 0
@@ -76,7 +76,7 @@ def bart(text, num_beams=5):
 
     chunk_summaries = []
     for chunk in chunks:
-        inputs = tokenizer(chunk, max_length=512, truncation=True, return_tensors="pt").to(device)
+        inputs = tokenizer(chunk, max_length=1024, truncation=True, return_tensors="pt").to(device)
 
         chunk_length = len(inputs["input_ids"][0])
         max_summary_len = min(100, int(chunk_length * 0.2))  # 20% of chunk length
@@ -96,7 +96,7 @@ def bart(text, num_beams=5):
 
     
     combined_text = " ".join(chunk_summaries)
-    inputs = tokenizer(combined_text, max_length=512, truncation=True, return_tensors="pt").to(device)
+    inputs = tokenizer(combined_text, max_length=1024, truncation=True, return_tensors="pt").to(device)
 
     final_summary_ids = model.generate(
         inputs["input_ids"],
