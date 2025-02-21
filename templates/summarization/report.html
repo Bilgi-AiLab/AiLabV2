@@ -8,6 +8,7 @@
 {% block content %}
 <body>
     <div class="container">
+        <div class="container2">
         <div class="header">
             <h1>{{ algorithm.upper }} Text Summarization Report</h1>
             <p>Project: {{ project.title }}</p>
@@ -25,27 +26,21 @@
             </div>
         </div>
         <div class="footer">
-            <p>Powered by PEGASUS and BERTScore</p>
+            <p>Powered by {{ algorithm.upper }} and BERTScore</p>
         </div>
+            </div>
     </div>
 </body>
 {% endblock %}
 {% block style %}
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-        color: #333;
-        margin: 0;
-        padding: 0;
-    }
     .container {
         max-width: 800px;
-        margin: 50px auto;
-        background: #ffffff;
+    }
+    .container2 {
         border-radius: 10px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
+        padding: 10px;
     }
     .header {
         text-align: center;
