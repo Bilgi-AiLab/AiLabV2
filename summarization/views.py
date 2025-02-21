@@ -117,7 +117,7 @@ def view_summarization_report(request, project_pk, algorithm, report_pk):
     breadcrumb = {
         "Projects": reverse('all_projects'),
         project.title: reverse('show_project', args=[project.id]),
-        "Summarization": reverse('summarization', args=[project_pk]),
+        "Summarization": reverse('summarization_algorithms', args=[project_pk]),
         algorithm.upper(): reverse('apply_summarization_algorithm', args=[project_pk, algorithm]),
         f"Report (id:{report.id})": ""
     }
