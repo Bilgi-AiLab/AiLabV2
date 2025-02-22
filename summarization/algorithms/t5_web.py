@@ -43,7 +43,7 @@ def t5(text, num_beams=5):
     return output
 '''
 
-def t5(text, num_beams=5):
+def t5(text, num_beams=3):
     # Initialize model and tokenizer
     model_name="google-t5/t5-base"
     device = "cuda" if torch.cuda.is_available() else "cpu"

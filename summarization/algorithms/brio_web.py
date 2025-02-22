@@ -41,7 +41,7 @@ def brio(text, num_beams=5):
 
     return output
 '''
-def brio(text, num_beams=5):
+def brio(text, num_beams=3):
     # Initialize model and tokenizer
    
     device = "cuda" if torch.cuda.is_available() else "cpu"

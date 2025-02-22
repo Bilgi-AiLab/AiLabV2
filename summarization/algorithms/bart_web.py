@@ -42,7 +42,7 @@ def bart(text, num_beams=5):
 
     return output
 '''
-def bart(text, num_beams=5):
+def bart(text, num_beams=3):
     # Initialize model and tokenizer
     model_name="facebook/bart-base"
     device = "cuda" if torch.cuda.is_available() else "cpu"
