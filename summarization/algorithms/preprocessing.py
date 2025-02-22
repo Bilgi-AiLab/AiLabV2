@@ -6,28 +6,22 @@ import os
 nltk.download("punkt")
 nltk.download("stopwords")
 
-def preprocess_text(text, remove_stopwords=False):
+def preprocess_text(text):
     
     # 1. Remove HTML tags
     text = re.sub(r"<.*?>", "", text)
     
     # 2. Remove URLs
     text = re.sub(r"http\S+|www\S+", "", text)
-    remove_mentions_and_hashtags = re.compile(r'[@#]\w+')
-    text = remove_mentions_and_hashtags.sub('', text)
-    # 3. Remove special characters, emojis, and extra spaces
-    text = re.sub(r"[^a-zA-Z0-9.,!?'\"]+", " ", text)  # Allow common punctuation
+
+    # 3. Remove @mentions but keep hashtags
+    text = re.sub(r"@\w+", "", text)  # Removes @user but keeps #hashtags
+
+    # 4. Keep important symbols and common punctuation
+    text = re.sub(r"[^a-zA-Z0-9.,!?'\-%$&/]+", " ", text)  
+
+    # 5. Remove extra spaces
     text = re.sub(r"\s+", " ", text).strip()
     
-    # 4. Lowercasing
-    text = text.lower()
-    
-    # 6. Remove stop words (if enabled)
-    if remove_stopwords:
-        stopwords =  nltk.corpus.stopwords.words('english') + nltk.corpus.stopwords.words('turkish')
-        file = open(f"{os.path.dirname(__file__)}/turkce-stop-words.txt")
-        stops = [line.strip() for line in file.readlines()]
-        stopwords.extend(stops)
-        text = ' '.join([word for word in text.split() if word not in stopwords])
     
     return text

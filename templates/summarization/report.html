@@ -20,13 +20,30 @@
             </p>
         </div>
         <div class="output-section">
-            <h2>BERT Score</h2>
+            <h2>ROUGE Scores</h2>
             <div class="score">
-                 Semantic Similarity: {{ bert_score }}
+                 ROUGE 1 <br>
+                 Precision: {{ rouge1_precision }} <br>
+                 Recall: {{ rouge1_recall }} <br>
+                 F1: {{ rouge1_f1 }} <br>
+
+                 <div style="height: 30px;"> --------------------- </div>
+
+                 ROUGE 2 <br>
+                 Precision: {{ rouge2_precision }} <br>
+                 Recall: {{ rouge2_recall }} <br>
+                 F1: {{ rouge2_f1 }} <br>
+
+                 <div style="height: 30px;"> --------------------- </div>
+                 
+                 ROUGE L <br>
+                 Precision: {{ rougeL_precision }} <br>
+                 Recall: {{ rougeL_recall }} <br>
+                 F1: {{ rougeL_f1 }} <br>
             </div>
         </div>
         <div class="footer">
-            <p>Powered by {{ algorithm.upper }} and BERTScore</p>
+            <p>Powered by {{ algorithm.upper }}</p>
         </div>
             </div>
     </div>

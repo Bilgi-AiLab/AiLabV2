@@ -1,6 +1,5 @@
 asgiref
 astroid
-bert_score
 bertopic
 bokeh
 boto
@@ -51,12 +50,14 @@ PyYAML
 regex
 requests
 retrying
+rouge-score
 s3transfer
 scikit-learn
 scipy
 sentencepiece
 six
 smart-open
+sumy
 sqlparse
 textblob
 threadpoolctl

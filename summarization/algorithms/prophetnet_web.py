@@ -1,8 +1,7 @@
 from transformers import ProphetNetForConditionalGeneration, ProphetNetTokenizer
 from summarization.algorithms.preprocessing import preprocess_text
-from bert_score import score
+from rouge_score import rouge_scorer
 import torch
-import os
 '''
 def prophetnet(text, num_beams=5):
     
@@ -78,15 +77,15 @@ def prophetnet(text, num_beams=5):
     for chunk in chunks:
         inputs = tokenizer(chunk, max_length=512, truncation=True, return_tensors="pt").to(device)
 
-        chunk_length = len(inputs["input_ids"][0])
-        max_summary_len = min(100, int(chunk_length * 0.2))  # 20% of chunk length
+        #chunk_length = len(inputs["input_ids"][0])
+        #max_summary_len = min(100, int(chunk_length * 0.2)) # 20% of chunk length
 
         
         summary_ids = model.generate(
             inputs["input_ids"],
-            max_length=max_summary_len,
-            min_length=10,
-            length_penalty=1.5,
+            max_length=100,
+            min_length=20,
+            length_penalty=0.8,
             num_beams=num_beams,
             early_stopping=True
         )
@@ -102,7 +101,7 @@ def prophetnet(text, num_beams=5):
         inputs["input_ids"],
         max_length=100,
         min_length=20,
-        length_penalty=1.5,
+        length_penalty=0.8,
         num_beams=num_beams,
         early_stopping=True
     )
@@ -110,12 +109,18 @@ def prophetnet(text, num_beams=5):
     final_summary = tokenizer.decode(final_summary_ids[0], skip_special_tokens=True)
 
     original_text = " ".join(processed_tweets)
-    P, R, F1 = score([final_summary], [original_text], lang="en", model_type="roberta-large")
-    bertscore_f1 = F1.mean().item()
+    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
+    rouge_scores = scorer.score(original_text, final_summary)
+
+    rouge1 = rouge_scores["rouge1"]
+    rouge2 = rouge_scores["rouge2"]
+    rougeL = rouge_scores["rougeL"]
 
     output = {
         "summary": final_summary,
-        "bert_score": bertscore_f1
+        "rouge1": rouge1,
+        "rouge2": rouge2,
+        "rougeL": rougeL
     }
 
     torch.cuda.empty_cache()

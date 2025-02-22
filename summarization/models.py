@@ -15,9 +15,21 @@ class Report(models.Model):
         return json.loads(self.all_data)
 
 
-    def bert_score(self):
+    def rouge1(self):
         try:
-            return self.get_output()["bert_score"]
+            return self.get_output()["rouge1"]
+        except KeyError:
+            return None
+    
+    def rouge2(self):
+        try:
+            return self.get_output()["rouge2"]
+        except KeyError:
+            return None
+        
+    def rougeL(self):
+        try:
+            return self.get_output()["rougeL"]
         except KeyError:
             return None
     

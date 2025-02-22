@@ -11,6 +11,7 @@ from summarization.algorithms.bart_web import bart
 from summarization.algorithms.t5_web import t5
 from summarization.algorithms.brio_web import brio
 from summarization.algorithms.prophetnet_web import prophetnet
+from summarization.algorithms.lexrank_web import lexrank
 
 def summarization_algorithms(request, pk):
     project = get_object_or_404(Project, pk=pk)
@@ -73,6 +74,9 @@ def apply_summarization_algorithm(request, pk, algorithm):
         elif algorithm.lower() == "prophetnet":
             output = prophetnet(corpus)
 
+        elif algorithm.lower() == "lexrank":
+            output = lexrank(corpus)
+
 
         content.update(output)
         content["files"] = [file.filename() for file in files]
@@ -98,14 +102,36 @@ def view_summarization_report(request, project_pk, algorithm, report_pk):
     # Extract data from the report
     report_output = report.get_output()
     summary = report.summary()
-    bert_score = report.bert_score()
+    rouge1 = report.rouge1()
+    rouge2 = report.rouge2()
+    rougeL = report.rougeL()
+
+    rouge1_precision = rouge1[0]
+    rouge1_recall = rouge1[1]
+    rouge1_f1 = rouge1[2]
+
+    rouge2_precision = rouge2[0]
+    rouge2_recall = rouge2[1]
+    rouge2_f1 = rouge2[2]
+
+    rougeL_precision = rougeL[0]
+    rougeL_recall = rougeL[1]
+    rougeL_f1 = rougeL[2]
     # Add data to the content dictionary
     content = {
         'project': project,
         'algorithm': algorithm,
         'files': [file.filename() for file in files],
         'summary': summary,
-        'bert_score': bert_score,
+        'rouge1_precision': rouge1_precision,
+        'rouge1_recall': rouge1_recall,
+        'rouge1_f1': rouge1_f1,
+        'rouge2_precision': rouge2_precision,
+        'rouge2_recall': rouge2_recall,
+        'rouge2_f1': rouge2_f1,
+        'rougeL_precision': rougeL_precision,
+        'rougeL_recall': rougeL_recall,
+        'rougeL_f1': rougeL_f1,
         'report': report,
         'title': f'{algorithm.upper()} Report - {project.title}',
     }
