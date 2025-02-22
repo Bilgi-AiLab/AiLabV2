@@ -13,7 +13,12 @@ class Report(models.Model):
 
     def get_output(self):
         return json.loads(self.all_data)
-
+    
+    def bert_score(self):
+        try:
+            return self.get_output()["bert_score"]
+        except KeyError:
+            return None
 
     def rouge1(self):
         try:

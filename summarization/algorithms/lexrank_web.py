@@ -3,6 +3,7 @@ from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
 from summarization.algorithms.preprocessing import preprocess_text
 from rouge_score import rouge_scorer
+from bert_score import score
 
 def lexrank(tweets, num_sentences=3):
     combined_text = " ".join(tweets)
@@ -29,11 +30,15 @@ def lexrank(tweets, num_sentences=3):
     rouge2 = rouge_scores["rouge2"]
     rougeL = rouge_scores["rougeL"]
 
+    P, R, F1 = score([summary], [combined_text], lang="en", model_type="roberta-large")
+    bertscore_f1 = F1.mean().item()
+
     output = {
         "summary": summary,
         "rouge1": rouge1,
         "rouge2": rouge2,
-        "rougeL": rougeL
+        "rougeL": rougeL,
+        "bert_score": bertscore_f1
     }
     
     return output

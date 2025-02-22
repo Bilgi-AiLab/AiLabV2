@@ -2,6 +2,7 @@ from transformers import PegasusForConditionalGeneration, PegasusTokenizer
 from summarization.algorithms.preprocessing import preprocess_text
 from rouge_score import rouge_scorer
 import torch
+from bert_score import score
 
 '''
 def pegasus(text, num_beams=5):
@@ -116,11 +117,15 @@ def pegasus(text, num_beams=2):
     rouge2 = rouge_scores["rouge2"]
     rougeL = rouge_scores["rougeL"]
 
+    P, R, F1 = score([final_summary], [original_text], lang="en", model_type="roberta-large")
+    bertscore_f1 = F1.mean().item()
+
     output = {
         "summary": final_summary,
         "rouge1": rouge1,
         "rouge2": rouge2,
-        "rougeL": rougeL
+        "rougeL": rougeL,
+        "bert_score": bertscore_f1
     }
 
     torch.cuda.empty_cache()

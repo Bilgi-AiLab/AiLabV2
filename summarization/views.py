@@ -117,6 +117,8 @@ def view_summarization_report(request, project_pk, algorithm, report_pk):
     rougeL_precision = rougeL[0]
     rougeL_recall = rougeL[1]
     rougeL_f1 = rougeL[2]
+
+    bert_score = report.bert_score()
     # Add data to the content dictionary
     content = {
         'project': project,
@@ -132,6 +134,7 @@ def view_summarization_report(request, project_pk, algorithm, report_pk):
         'rougeL_precision': rougeL_precision,
         'rougeL_recall': rougeL_recall,
         'rougeL_f1': rougeL_f1,
+        'bert_score': bert_score,
         'report': report,
         'title': f'{algorithm.upper()} Report - {project.title}',
     }
