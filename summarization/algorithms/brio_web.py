@@ -6,45 +6,7 @@ import torch
 from sumy.parsers.plaintext import PlaintextParser
 from sumy.nlp.tokenizers import Tokenizer
 from sumy.summarizers.lex_rank import LexRankSummarizer
-'''
-# Use this if you have high gpu power
-def brio(text, num_beams=5):
-    
-    #os.environ["WANDB_DISABLED"] = "true"
-    #os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
-    
-    model_name="Yale-LILY/brio-xsum-cased"
-    device = "cuda"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)
 
-    texts =[ preprocess_text(txt) for txt in text]
-    # Tokenize the input text
-    inputs = tokenizer(texts, max_length=1024, truncation=True, padding=True, return_tensors="pt").to(device)
-    
-    # Generate the summary
-    summary_ids = model.generate(
-        inputs["input_ids"], 
-        max_length=60, 
-        min_length=10, 
-        length_penalty=2.0, 
-        num_beams=num_beams, 
-        early_stopping=True
-    )
-    
-    # Decode the generated tokens to text
-    summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True)
-
-    P, R, F1 = score([summary], [text], lang="en", model_type="roberta-large")
-    bertscore_f1 = F1.mean().item()
-
-    output = {
-        "summary": summary,
-        "bert_score": bertscore_f1
-    }
-
-    return output
-'''
 '''
 # Not efficient
 def brio(text, num_beams=3):
@@ -154,7 +116,7 @@ def brio(text, num_beams=3):
     #print(combined_text)
 
     parser = PlaintextParser.from_string(combined_text, Tokenizer("english"))
-
+    
     summarizer = LexRankSummarizer()
 
     summary_sentences = summarizer(parser.document, 10)
