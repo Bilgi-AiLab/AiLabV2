@@ -1,6 +1,7 @@
 import os
 import shutil
 import zipfile
+from django.core.files.base import ContentFile
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -35,7 +36,14 @@ def create_project(request):
         author = request.user
         name = ""
         files = []
-        if 'files' in request.FILES:
+        if 'text' in request.POST:
+            name = request.POST['name']
+            text = request.POST['text']
+
+            # Convert text input into an in-memory .txt file
+            text_file = ContentFile(text.encode('utf-8'), name=f"{name}.txt")
+            files.append(text_file)
+        elif 'files' in request.FILES:
             name = request.POST['name']
             files = request.FILES.getlist('files')
         elif 'folder_files' in request.FILES:
@@ -120,10 +128,7 @@ def download(request, pk):
 
         # create the zipfile in memory using writestr
         # add a readme
-        zf.writestr("README.MD",
-                    f'''# File List
-Total {len(files)} files.
-''')
+        zf.writestr("README.MD", f'''# File List Total {len(files)} files. ''')
         project = get_object_or_404(Project, pk=pk)
 
         for file in files:
