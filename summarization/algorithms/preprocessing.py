@@ -5,6 +5,7 @@ import os
 # Download NLTK data (if not already done)
 nltk.download("punkt")
 nltk.download("stopwords")
+nltk.download('punkt_tab')
 
 def preprocess_text(text):
     
@@ -22,6 +23,10 @@ def preprocess_text(text):
 
     # 5. Remove extra spaces
     text = re.sub(r"\s+", " ", text).strip()
+
+    # 6. Ensure the sentence ends with a punctuation mark
+    if text and not re.search(r"[.!?]$", text):
+        text += "."
     
     
     return text
