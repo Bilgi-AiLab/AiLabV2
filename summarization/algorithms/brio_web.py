@@ -57,7 +57,7 @@ def brio(text, num_beams=3):
         summary_ids = model.generate(
             inputs["input_ids"],
             max_length=100,
-            min_length=20,
+            min_length=10,
             length_penalty=0.8,
             num_beams=num_beams,
             early_stopping=True
@@ -73,7 +73,7 @@ def brio(text, num_beams=3):
     final_summary_ids = model.generate(
         inputs["input_ids"],
         max_length=100,
-        min_length=20,
+        min_length=10,
         length_penalty=0.8,
         num_beams=num_beams,
         early_stopping=True
