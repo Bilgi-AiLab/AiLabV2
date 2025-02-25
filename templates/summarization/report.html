@@ -48,9 +48,17 @@
                  F1: {{ rougeL_f1 }} <br>
             </div>
         </div>
+        {% if algorithm|lower != "lexrank" %} 
         <div class="footer">
-            <p>Powered by {{ algorithm.upper }}</p>
+            <p>Powered by {{ algorithm.upper }} and LexRank</p>
         </div>
+        {% endif %}
+        {% if algorithm|lower == "lexrank" %} 
+        <div class="footer">
+            <p>Powered by LexRank</p>
+        </div>
+        {% endif %}
+
             </div>
     </div>
 </body>
