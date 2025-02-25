@@ -120,7 +120,7 @@ def bart(text, num_beams=3):
     
     summary = " ".join(str(sentence) for sentence in summary_sentences)
 
-    inputs = tokenizer(summary, max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt").to(device)
+    inputs = tokenizer(summary, max_length=1024, truncation=True, return_tensors="pt").to(device)
 
     final_summary_ids = model.generate(
         inputs["input_ids"],
