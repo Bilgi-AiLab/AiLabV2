@@ -113,10 +113,8 @@ def t5(text, num_beams=3):
 
     parser = PlaintextParser.from_string(original_text , Tokenizer("english"))
 
-    # Initialize LexRank summarizer
     summarizer = LexRankSummarizer()
 
-    # Generate summary (take the top N sentences)
     summary_sentences = summarizer(parser.document, 10)
     
     summary = " ".join(str(sentence) for sentence in summary_sentences)
@@ -135,7 +133,7 @@ def t5(text, num_beams=3):
     final_summary = tokenizer.decode(final_summary_ids[0], skip_special_tokens=True)
 
     scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
-    rouge_scores = scorer.score(original_text, final_summary)
+    rouge_scores = scorer.score(summary, final_summary)
     rouge1 = rouge_scores["rouge1"]
     rouge2 = rouge_scores["rouge2"]
     rougeL = rouge_scores["rougeL"]

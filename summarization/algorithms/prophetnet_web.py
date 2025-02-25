@@ -111,19 +111,15 @@ def prophetnet(text, num_beams=3):
 
     processed_tweets = [preprocess_text(txt) for txt in text]
 
-    #combined_text = ". ".join(processed_tweets) + "."
-    combined_text = " ".join(processed_tweets)
-    #print(combined_text)
+    original_text = " ".join(processed_tweets)
 
-    parser = PlaintextParser.from_string(combined_text, Tokenizer("english"))
+    parser = PlaintextParser.from_string(original_text, Tokenizer("english"))
 
     summarizer = LexRankSummarizer()
 
     summary_sentences = summarizer(parser.document, 10)
-    #print(summary_sentences)
     
     summary = " ".join(str(sentence) for sentence in summary_sentences)
-    #print(f'Extractive Summary: {summary}')
 
     inputs = tokenizer(summary, max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt").to(device)
 
@@ -138,8 +134,6 @@ def prophetnet(text, num_beams=3):
 
     final_summary = tokenizer.decode(final_summary_ids[0], skip_special_tokens=True)
 
-
-    original_text = " ".join(processed_tweets)
     scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
     rouge_scores = scorer.score(summary, final_summary)
     rouge1 = rouge_scores["rouge1"]
