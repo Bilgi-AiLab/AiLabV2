@@ -42,11 +42,11 @@ def t5(text, num_beams=3):
         return chunks
 
 
-    chunks = create_dynamic_chunks(processed_tweets, tokenizer.model_max_length)
+    chunks = create_dynamic_chunks(processed_tweets, 512)
 
     chunk_summaries = []
     for chunk in chunks:
-        inputs = tokenizer(chunk, max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt").to(device)
+        inputs = tokenizer(chunk, max_length=512, truncation=True, return_tensors="pt").to(device)
 
         #chunk_length = len(inputs["input_ids"][0])
         #max_summary_len = min(100, int(chunk_length * 0.2)) # 20% of chunk length
@@ -66,7 +66,7 @@ def t5(text, num_beams=3):
 
     
     combined_text = " ".join(chunk_summaries)
-    inputs = tokenizer(combined_text, max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt").to(device)
+    inputs = tokenizer(combined_text, max_length=512, truncation=True, return_tensors="pt").to(device)
 
     final_summary_ids = model.generate(
         inputs["input_ids"],
@@ -121,7 +121,7 @@ def t5(text, num_beams=3):
     
     summary = " ".join(str(sentence) for sentence in summary_sentences)
 
-    inputs = tokenizer(summary, max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt").to(device)
+    inputs = tokenizer(summary, max_length=512, truncation=True, return_tensors="pt").to(device)
 
     final_summary_ids = model.generate(
         inputs["input_ids"],
