@@ -115,7 +115,7 @@ def pegasus(text, num_beams=3):
 
     summarizer = LexRankSummarizer()
 
-    summary_sentences = summarizer(parser.document, 10)
+    summary_sentences = summarizer(parser.document, 10) #150
     
     summary = " ".join(str(sentence) for sentence in summary_sentences)
 
