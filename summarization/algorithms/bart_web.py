@@ -103,7 +103,7 @@ def bart(text, num_beams=3):
     return output
 '''
 def bart(text, num_beams=3):
-    model_name="facebook/bart-base"
+    model_name="facebook/bart-large-cnn"
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = BartTokenizer.from_pretrained(model_name)
     model = BartForConditionalGeneration.from_pretrained(model_name).to(device)
@@ -116,7 +116,7 @@ def bart(text, num_beams=3):
 
     summarizer = LexRankSummarizer()
 
-    summary_sentences = summarizer(parser.document, 15)
+    summary_sentences = summarizer(parser.document, 10)
     
     summary = " ".join(str(sentence) for sentence in summary_sentences)
 
