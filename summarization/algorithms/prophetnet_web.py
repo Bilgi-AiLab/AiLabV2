@@ -155,7 +155,7 @@ def prophetnet(text, num_beams=3):
     torch.cuda.empty_cache()
     return output
 '''
-def prophetnet(text, num_beams=3):
+def prophetnet(text):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model_name="microsoft/prophetnet-large-uncased"
     tokenizer = ProphetNetTokenizer.from_pretrained(model_name)
@@ -169,10 +169,10 @@ def prophetnet(text, num_beams=3):
 
     final_summary_ids = model.generate(
         inputs["input_ids"],
-        max_length=100,
-        min_length=10,
-        length_penalty=0.8,
-        num_beams=num_beams,
+        max_length=600,
+        min_length=50,
+        length_penalty=2.0,
+        num_beams=10,
         early_stopping=True
     )
 

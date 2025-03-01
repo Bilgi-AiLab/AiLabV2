@@ -153,7 +153,7 @@ def t5(text, num_beams=3):
     torch.cuda.empty_cache()
     return output
 '''
-def t5(text, num_beams=3):
+def t5(text):
     model_name="google-t5/t5-small"
     device = "cuda" if torch.cuda.is_available() else "cpu"
     tokenizer = T5Tokenizer.from_pretrained(model_name)
@@ -167,10 +167,10 @@ def t5(text, num_beams=3):
 
     final_summary_ids = model.generate(
         inputs["input_ids"],
-        max_length=100,
-        min_length=10,
-        length_penalty=0.8,
-        num_beams=num_beams,
+        max_length=600,
+        min_length=50,
+        length_penalty=2.0,
+        num_beams=10,
         early_stopping=True
     )
 

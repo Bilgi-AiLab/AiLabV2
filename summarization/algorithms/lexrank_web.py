@@ -5,7 +5,7 @@ from summarization.algorithms.preprocessing import preprocess_text
 from rouge_score import rouge_scorer
 from bert_score import score
 
-def lexrank(tweets, num_sentences=3):
+def lexrank(tweets, num_sentences=5):
     combined_text = " ".join(tweets)
 
     # Preprocess the combined text
