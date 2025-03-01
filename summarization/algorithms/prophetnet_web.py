@@ -103,6 +103,7 @@ def prophetnet(text, num_beams=3):
     torch.cuda.empty_cache()
     return output
 '''
+'''
 def prophetnet(text, num_beams=3):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model_name="microsoft/prophetnet-large-uncased"
@@ -136,6 +137,49 @@ def prophetnet(text, num_beams=3):
 
     scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
     rouge_scores = scorer.score(summary, final_summary)
+    rouge1 = rouge_scores["rouge1"]
+    rouge2 = rouge_scores["rouge2"]
+    rougeL = rouge_scores["rougeL"]
+
+    P, R, F1 = score([final_summary], [original_text], lang="en", model_type="roberta-large")
+    bertscore_f1 = F1.mean().item()
+
+    output = {
+        "summary": final_summary,
+        "rouge1": rouge1,
+        "rouge2": rouge2,
+        "rougeL": rougeL,
+        "bert_score": bertscore_f1
+    }
+
+    torch.cuda.empty_cache()
+    return output
+'''
+def prophetnet(text, num_beams=3):
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    model_name="microsoft/prophetnet-large-uncased"
+    tokenizer = ProphetNetTokenizer.from_pretrained(model_name)
+    model = ProphetNetForConditionalGeneration.from_pretrained(model_name).to(device)
+
+    processed_tweets = [preprocess_text(txt) for txt in text]
+
+    original_text = " ".join(processed_tweets)
+
+    inputs = tokenizer(original_text, max_length=tokenizer.model_max_length, truncation=True, return_tensors="pt").to(device)
+
+    final_summary_ids = model.generate(
+        inputs["input_ids"],
+        max_length=100,
+        min_length=10,
+        length_penalty=0.8,
+        num_beams=num_beams,
+        early_stopping=True
+    )
+
+    final_summary = tokenizer.decode(final_summary_ids[0], skip_special_tokens=True)
+
+    scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
+    rouge_scores = scorer.score(original_text, final_summary)
     rouge1 = rouge_scores["rouge1"]
     rouge2 = rouge_scores["rouge2"]
     rougeL = rouge_scores["rougeL"]
