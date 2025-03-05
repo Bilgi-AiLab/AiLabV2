@@ -28,12 +28,161 @@
 
 {% include 'components/footer.html' %}
 
+<!-- Chatbot Button (stays fixed in corner) -->
+<div id="chatbot-button" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #007bff;
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1050;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+">
+    <i class="ion-chatbubbles" style="font-size: 24px;"></i>
+</div>
+
+<!-- Chatbot Modal (starts hidden via opacity/pointer-events) -->
+<div id="chatbot-modal" style="
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 300px;
+    height: 400px;
+    background-color: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none; /* makes it unclickable when hidden */
+    transition: opacity 0.3s ease;
+">
+    <div style="
+        background-color: #007bff;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        font-weight: bold;
+        flex-shrink: 0;
+    ">
+        Chatbot
+        <span id="close-chatbot" style="float: right; cursor: pointer;">&times;</span>
+    </div>
+    <div id="chatbot-content" style="
+        flex-grow: 1;
+        padding: 10px;
+        overflow-y: auto;
+    ">
+        <p>👋 Hi! How can I help you today?</p>
+    </div>
+    <div style="
+        padding: 5px;
+        border-top: 1px solid #ddd;
+        flex-shrink: 0;
+        background-color: #f9f9f9;
+    ">
+        <input type="text" id="chatbot-input" placeholder="Type a message..." style="
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+        ">
+    </div>
+</div>
+
 <script src="{% static  'js/jquery.min.js' %}"></script>
 <script src="{% static  'bootstrap/js/bootstrap.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
 <script src="{% static  'js/theme.js' %}"></script>
 <script src="{% static  'js/plotly-latest.min.js' %}"></script>
+
 {% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatbotButton = document.getElementById('chatbot-button');
+        const chatbotModal = document.getElementById('chatbot-modal');
+        const closeChatbot = document.getElementById('close-chatbot');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotContent = document.getElementById('chatbot-content');
+
+        function openChatbot() {
+            chatbotModal.style.opacity = '1';
+            chatbotModal.style.pointerEvents = 'auto';
+            chatbotInput.focus();
+        }
+
+        function closeChatbotModal() {
+            chatbotModal.style.opacity = '0';
+            chatbotModal.style.pointerEvents = 'none';
+        }
+
+        chatbotButton.addEventListener('click', function() {
+            if (chatbotModal.style.opacity === '0' || chatbotModal.style.opacity === '') {
+                openChatbot();
+            } else {
+                closeChatbotModal();
+            }
+        });
+
+        closeChatbot.addEventListener('click', closeChatbotModal);
+
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const message = chatbotInput.value.trim();
+                if (message) {
+                    appendMessage('You', message);
+                    chatbotInput.value = '';
+
+                    fetch('{% url "chatbot_response" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({ message: message })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.response) {
+                            appendMessage('Bot', data.response);
+                        } else {
+                            appendMessage('Bot', 'Error: Unable to fetch response.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        appendMessage('Bot', 'Unexpected error.');
+                    });
+                }
+            }
+        });
+
+        function appendMessage(sender, text) {
+            const messageElem = document.createElement('p');
+            messageElem.style.margin = '5px 0';
+            messageElem.style.padding = '5px';
+            messageElem.style.backgroundColor = sender === 'You' ? '#e9f5ff' : '#f1f1f1';
+            messageElem.style.borderRadius = '5px';
+            messageElem.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chatbotContent.appendChild(messageElem);
+            chatbotContent.scrollTop = chatbotContent.scrollHeight;
+        }
+
+        // Start hidden (just in case)
+        closeChatbotModal();
+    });
+
+
+</script>
 {% endblock %}
 </body>
 

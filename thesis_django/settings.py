@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_static_ionicons',
     'project',
     'home',
+    'chatbot',
     'topic_modelling',
     'sentiment_analysis',
     'summarization',

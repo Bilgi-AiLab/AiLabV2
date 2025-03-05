@@ -10,7 +10,7 @@ from summarization.algorithms.pegasus_web import pegasus
 from summarization.algorithms.bart_web import bart
 from summarization.algorithms.t5_web import t5
 from summarization.algorithms.brio_web import brio
-from summarization.algorithms.prophetnet_web import prophetnet
+from summarization.algorithms.deepseek_web import deepseek
 from summarization.algorithms.lexrank_web import lexrank
 
 def summarization_algorithms(request, pk):
@@ -71,8 +71,8 @@ def apply_summarization_algorithm(request, pk, algorithm):
         elif algorithm.lower() == "brio":
             output = brio(corpus)
 
-        elif algorithm.lower() == "prophetnet":
-            output = prophetnet(corpus)
+        elif algorithm.lower() == "deepseek":
+            output = deepseek(corpus)
 
         elif algorithm.lower() == "lexrank":
             output = lexrank(corpus)

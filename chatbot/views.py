@@ -1,0 +1,40 @@
+import os
+from openai import OpenAI
+from django.http import JsonResponse
+import json
+
+def chatbot(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            user_message = data.get("message", "")
+
+            if not user_message:
+                return JsonResponse({"error": "Message is required"}, status=400)
+
+            client = OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key="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",
+            )
+
+            completion = client.chat.completions.create(
+
+            model="deepseek/deepseek-r1-distill-llama-70b:free",
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant in a web application. This web application consists of applying textual data analysis such as sentiment analysis, summarization, topic modeling and document similarity. There is also a documentation section which covers everything. Your task is to provide detailed and accurate responses based on the context provided."
+                },
+                {
+                    "role": "user",
+                    "content": f"{user_message}"
+                }
+            ]
+            )
+            bot_reply = completion.choices[0].message.content
+            return JsonResponse({"response": bot_reply})
+
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request"}, status=400)

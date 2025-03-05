@@ -34,6 +34,7 @@ mccabe
 mpld3
 nltk
 numpy
+openai
 openpyxl
 packaging
 pandas

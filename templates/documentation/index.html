@@ -102,7 +102,7 @@
                                    <div id="1">
                                        <h1>Welcome to Bilgi AILab</h1>
 <hr />
-<p>This website has been prepared as a thesis project by Bilgi University Computer Engineering students İbrahim Doğan, Hanefi Enes Gül and Simge Erek. We would like to thank our thesis advisor Tuğba Yıldız teacher.</p>
+<p>This website has been prepared as a thesis project by Bilgi University Computer Engineering students İbrahim Doğan, Hanefi Enes Gül, Simge Erek, Ahmet Yiğit Özkoca, Ahmet Yiğit Karatay and Kubilay Kürtür. We would like to thank our thesis advisor Tuğba Yıldız teacher.</p>
 <p>In this project, Django, Bootstrap 4, Bokeh, Plot.ly, Ionicons tools were used. Thanks also to the open source developers.</p>
 <p>Data is stored publicly on Digital Ocean servers, do not upload your sensitive data.</p>
                                    </div>
@@ -290,5 +290,79 @@ you can select all the files or filter them by a certain percentage and download
                 scrollTop: $($(this).attr('href')).offset().top - 100
             }, 500);
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+        const chatbotButton = document.getElementById('chatbot-button');
+        const chatbotModal = document.getElementById('chatbot-modal');
+        const closeChatbot = document.getElementById('close-chatbot');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotContent = document.getElementById('chatbot-content');
+
+        function openChatbot() {
+            chatbotModal.style.opacity = '1';
+            chatbotModal.style.pointerEvents = 'auto';
+            chatbotInput.focus();
+        }
+
+        function closeChatbotModal() {
+            chatbotModal.style.opacity = '0';
+            chatbotModal.style.pointerEvents = 'none';
+        }
+
+        chatbotButton.addEventListener('click', function() {
+            if (chatbotModal.style.opacity === '0' || chatbotModal.style.opacity === '') {
+                openChatbot();
+            } else {
+                closeChatbotModal();
+            }
+        });
+
+        closeChatbot.addEventListener('click', closeChatbotModal);
+
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const message = chatbotInput.value.trim();
+                if (message) {
+                    appendMessage('You', message);
+                    chatbotInput.value = '';
+
+                    fetch('{% url "chatbot_response" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({ message: message })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.response) {
+                            appendMessage('Bot', data.response);
+                        } else {
+                            appendMessage('Bot', 'Error: Unable to fetch response.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        appendMessage('Bot', 'Unexpected error.');
+                    });
+                }
+            }
+        });
+
+        function appendMessage(sender, text) {
+            const messageElem = document.createElement('p');
+            messageElem.style.margin = '5px 0';
+            messageElem.style.padding = '5px';
+            messageElem.style.backgroundColor = sender === 'You' ? '#e9f5ff' : '#f1f1f1';
+            messageElem.style.borderRadius = '5px';
+            messageElem.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chatbotContent.appendChild(messageElem);
+            chatbotContent.scrollTop = chatbotContent.scrollHeight;
+        }
+
+        // Start hidden (just in case)
+        closeChatbotModal();
+    });
     </script>
 {% endblock %}
