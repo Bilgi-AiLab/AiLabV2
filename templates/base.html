@@ -7,28 +7,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>{% if title %}{{ title }} - {% endif %}Thesis</title>
-    <link rel="stylesheet" href="{% static  'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
     <link rel="stylesheet" href="{% static 'ionicons/css/ionicons.min.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/css/pikaday.min.css">
-    {% block head %}
-    {% endblock %}
+    {% block head %}{% endblock %}
 </head>
 
 <body>
-{% block style %}
-{% endblock %}
+{% block style %}{% endblock %}
 
 {% include 'components/navbar.html' %}
 {% include 'components/breadcrumb.html' %}
 {% include 'components/loading.html' %}
 
-{% block content %}
-{% endblock %}
+{% block content %}{% endblock %}
 
 {% include 'components/footer.html' %}
 
-<!-- Chatbot Button (stays fixed in corner) -->
+<!-- Chatbot Button (Floating Icon) -->
 <div id="chatbot-button" style="
     position: fixed;
     bottom: 20px;
@@ -48,7 +45,7 @@
     <i class="ion-chatbubbles" style="font-size: 24px;"></i>
 </div>
 
-<!-- Chatbot Modal (starts hidden via opacity/pointer-events) -->
+<!-- Chatbot Modal -->
 <div id="chatbot-modal" style="
     position: fixed;
     bottom: 100px;
@@ -64,7 +61,7 @@
     display: flex;
     flex-direction: column;
     opacity: 0;
-    pointer-events: none; /* makes it unclickable when hidden */
+    pointer-events: none;
     transition: opacity 0.3s ease;
 ">
     <div style="
@@ -82,13 +79,13 @@
         flex-grow: 1;
         padding: 10px;
         overflow-y: auto;
+        background-color: #f9f9f9;
     ">
         <p>👋 Hi! How can I help you today?</p>
     </div>
     <div style="
         padding: 5px;
         border-top: 1px solid #ddd;
-        flex-shrink: 0;
         background-color: #f9f9f9;
     ">
         <input type="text" id="chatbot-input" placeholder="Type a message..." style="
@@ -99,11 +96,11 @@
     </div>
 </div>
 
-<script src="{% static  'js/jquery.min.js' %}"></script>
-<script src="{% static  'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pikaday/1.6.1/pikaday.min.js"></script>
-<script src="{% static  'js/theme.js' %}"></script>
-<script src="{% static  'js/plotly-latest.min.js' %}"></script>
+<script src="{% static 'js/theme.js' %}"></script>
+<script src="{% static 'js/plotly-latest.min.js' %}"></script>
 
 {% block script %}
 <script>
@@ -113,6 +110,33 @@
         const closeChatbot = document.getElementById('close-chatbot');
         const chatbotInput = document.getElementById('chatbot-input');
         const chatbotContent = document.getElementById('chatbot-content');
+
+        let typingIndicator = null;
+
+        function injectTypingAnimationCSS() {
+            if (document.getElementById('typing-animation-style')) return;
+
+            const style = document.createElement('style');
+            style.id = 'typing-animation-style';
+            style.innerHTML = `
+                .typing-dot {
+                    width: 6px;
+                    height: 6px;
+                    background-color: #555;
+                    border-radius: 50%;
+                    animation: blink 1.5s infinite;
+                }
+                .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+                .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+                @keyframes blink {
+                    0% { opacity: 0; }
+                    50% { opacity: 1; }
+                    100% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
 
         function openChatbot() {
             chatbotModal.style.opacity = '1';
@@ -141,6 +165,7 @@
                 if (message) {
                     appendMessage('You', message);
                     chatbotInput.value = '';
+                    showTypingIndicator();
 
                     fetch('{% url "chatbot_response" %}', {
                         method: 'POST',
@@ -152,14 +177,15 @@
                     })
                     .then(response => response.json())
                     .then(data => {
+                        hideTypingIndicator();
                         if (data.response) {
                             appendMessage('Bot', data.response);
                         } else {
                             appendMessage('Bot', 'Error: Unable to fetch response.');
                         }
                     })
-                    .catch(error => {
-                        console.error("Error:", error);
+                    .catch(() => {
+                        hideTypingIndicator();
                         appendMessage('Bot', 'Unexpected error.');
                     });
                 }
@@ -177,13 +203,44 @@
             chatbotContent.scrollTop = chatbotContent.scrollHeight;
         }
 
-        // Start hidden (just in case)
+        function showTypingIndicator() {
+            if (typingIndicator) return;
+
+            typingIndicator = document.createElement('div');
+            typingIndicator.style.display = 'flex';
+            typingIndicator.style.alignItems = 'center';
+            typingIndicator.style.gap = '5px';
+            typingIndicator.style.padding = '5px';
+            typingIndicator.style.backgroundColor = '#f1f1f1';
+            typingIndicator.style.borderRadius = '5px';
+            typingIndicator.innerHTML = `<em></em>`;
+
+            const dotsContainer = document.createElement('div');
+            dotsContainer.style.display = 'flex';
+            dotsContainer.style.gap = '3px';
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                dotsContainer.appendChild(dot);
+            }
+            typingIndicator.appendChild(dotsContainer);
+
+            chatbotContent.appendChild(typingIndicator);
+            chatbotContent.scrollTop = chatbotContent.scrollHeight;
+            injectTypingAnimationCSS();
+        }
+
+        function hideTypingIndicator() {
+            if (typingIndicator) {
+                typingIndicator.remove();
+                typingIndicator = null;
+            }
+        }
+
         closeChatbotModal();
     });
-
-
 </script>
 {% endblock %}
 </body>
-
 </html>
