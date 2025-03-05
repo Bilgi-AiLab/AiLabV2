@@ -284,6 +284,13 @@ you can select all the files or filter them by a certain percentage and download
 
 {% block script %}
     <script>
+     $('.scroll').click(function () {
+            console.log($($(this).attr('href')).offset().top)
+            $('html, body').animate({
+                scrollTop: $($(this).attr('href')).offset().top - 100
+            }, 500);
+        });
+
     document.addEventListener('DOMContentLoaded', function() {
         const chatbotButton = document.getElementById('chatbot-button');
         const chatbotModal = document.getElementById('chatbot-modal');
@@ -383,7 +390,41 @@ you can select all the files or filter them by a certain percentage and download
             chatbotContent.scrollTop = chatbotContent.scrollHeight;
         }
 
-        // Start hidden (just in case)
+        function showTypingIndicator() {
+            if (typingIndicator) return;
+
+            typingIndicator = document.createElement('div');
+            typingIndicator.style.display = 'flex';
+            typingIndicator.style.alignItems = 'center';
+            typingIndicator.style.gap = '5px';
+            typingIndicator.style.padding = '5px';
+            typingIndicator.style.backgroundColor = '#f1f1f1';
+            typingIndicator.style.borderRadius = '5px';
+            typingIndicator.innerHTML = `<em></em>`;
+
+            const dotsContainer = document.createElement('div');
+            dotsContainer.style.display = 'flex';
+            dotsContainer.style.gap = '3px';
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                dotsContainer.appendChild(dot);
+            }
+            typingIndicator.appendChild(dotsContainer);
+
+            chatbotContent.appendChild(typingIndicator);
+            chatbotContent.scrollTop = chatbotContent.scrollHeight;
+            injectTypingAnimationCSS();
+        }
+
+        function hideTypingIndicator() {
+            if (typingIndicator) {
+                typingIndicator.remove();
+                typingIndicator = null;
+            }
+        }
+
         closeChatbotModal();
     });
 </script>
