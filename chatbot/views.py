@@ -23,7 +23,7 @@ def chatbot(request):
             messages=[
                 {
                     "role": "system",
-                    "content": "You are a helpful assistant in a web application. This web application consists of applying textual data analysis such as sentiment analysis, summarization, topic modeling and document similarity. There is also a documentation section which covers everything. Your task is to provide detailed and accurate responses based on the context provided."
+                    "content": "You are a helpful assistant in a web application. This web application consists of applying textual data analysis such as sentiment analysis, summarization, topic modeling and document similarity. There is also a documentation section which covers everything. The user will provide a series of questions or small talk with you and your task is to provide detailed and accurate responses based on the context provided."
                 },
                 {
                     "role": "user",
