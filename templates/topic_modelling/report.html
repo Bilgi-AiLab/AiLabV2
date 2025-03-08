@@ -325,6 +325,144 @@
 
 {% block script %}
 <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+        const chatbotButton = document.getElementById('chatbot-button');
+        const chatbotModal = document.getElementById('chatbot-modal');
+        const closeChatbot = document.getElementById('close-chatbot');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotContent = document.getElementById('chatbot-content');
+
+        let typingIndicator = null;
+
+        function injectTypingAnimationCSS() {
+            if (document.getElementById('typing-animation-style')) return;
+
+            const style = document.createElement('style');
+            style.id = 'typing-animation-style';
+            style.innerHTML = `
+                .typing-dot {
+                    width: 6px;
+                    height: 6px;
+                    background-color: #555;
+                    border-radius: 50%;
+                    animation: blink 1.5s infinite;
+                }
+                .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+                .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+                @keyframes blink {
+                    0% { opacity: 0; }
+                    50% { opacity: 1; }
+                    100% { opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function openChatbot() {
+            chatbotModal.style.opacity = '1';
+            chatbotModal.style.pointerEvents = 'auto';
+            chatbotInput.focus();
+        }
+
+        function closeChatbotModal() {
+            chatbotModal.style.opacity = '0';
+            chatbotModal.style.pointerEvents = 'none';
+        }
+
+        chatbotButton.addEventListener('click', function() {
+            if (chatbotModal.style.opacity === '0' || chatbotModal.style.opacity === '') {
+                openChatbot();
+            } else {
+                closeChatbotModal();
+            }
+        });
+
+        closeChatbot.addEventListener('click', closeChatbotModal);
+
+        chatbotInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const message = chatbotInput.value.trim();
+                if (message) {
+                    appendMessage('You', message);
+                    chatbotInput.value = '';
+                    showTypingIndicator();
+
+                    fetch('{% url "chatbot_response" %}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}',
+                        },
+                        body: JSON.stringify({ message: message })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        hideTypingIndicator();
+                        if (data.response) {
+                            appendMessage('Bot', data.response);
+                        } else {
+                            appendMessage('Bot', 'Error: Unable to fetch response.');
+                        }
+                    })
+                    .catch(() => {
+                        hideTypingIndicator();
+                        appendMessage('Bot', 'Unexpected error.');
+                    });
+                }
+            }
+        });
+
+        function appendMessage(sender, text) {
+            const messageElem = document.createElement('p');
+            messageElem.style.margin = '5px 0';
+            messageElem.style.padding = '5px';
+            messageElem.style.backgroundColor = sender === 'You' ? '#e9f5ff' : '#f1f1f1';
+            messageElem.style.borderRadius = '5px';
+            messageElem.innerHTML = `<strong>${sender}:</strong> ${text}`;
+            chatbotContent.appendChild(messageElem);
+            chatbotContent.scrollTop = chatbotContent.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            if (typingIndicator) return;
+
+            typingIndicator = document.createElement('div');
+            typingIndicator.style.display = 'flex';
+            typingIndicator.style.alignItems = 'center';
+            typingIndicator.style.gap = '5px';
+            typingIndicator.style.padding = '5px';
+            typingIndicator.style.backgroundColor = '#f1f1f1';
+            typingIndicator.style.borderRadius = '5px';
+            typingIndicator.innerHTML = `<em></em>`;
+
+            const dotsContainer = document.createElement('div');
+            dotsContainer.style.display = 'flex';
+            dotsContainer.style.gap = '3px';
+
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                dotsContainer.appendChild(dot);
+            }
+            typingIndicator.appendChild(dotsContainer);
+
+            chatbotContent.appendChild(typingIndicator);
+            chatbotContent.scrollTop = chatbotContent.scrollHeight;
+            injectTypingAnimationCSS();
+        }
+
+        function hideTypingIndicator() {
+            if (typingIndicator) {
+                typingIndicator.remove();
+                typingIndicator = null;
+            }
+        }
+
+        closeChatbotModal();
+    });
+
     // Function to download an element as PNG
     function downloadAsPNG(elementId) {
         const element = document.getElementById(elementId);
