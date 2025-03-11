@@ -77,13 +77,58 @@
                                    </ul>
                                </li>
 
+
+                               <li>
+                                <h5 class="mt-2 text-lg-left">Sentiment Analysis</h5>
+                                <ul>
+
+                                        <li style="list-style-type: circle;">
+                                            <a class="page-in-link scroll"
+                                               href="#9">Select Algorithm</a>
+                                        </li>
+
+                                        <li style="list-style-type: circle;">
+                                            <a class="page-in-link scroll"
+                                               href="#10">Apply Algorithm</a>
+                                        </li>
+
+                                        <li style="list-style-type: circle;">
+                                            <a class="page-in-link scroll"
+                                               href="#11">Explore Results</a>
+                                        </li>
+
+                                </ul>
+                            </li>
+
+                            <li>
+                                <h5 class="mt-2 text-lg-left">Summarization</h5>
+                                <ul>
+
+                                        <li style="list-style-type: circle;">
+                                            <a class="page-in-link scroll"
+                                               href="#12">Select Algorithm</a>
+                                        </li>
+
+                                        <li style="list-style-type: circle;">
+                                            <a class="page-in-link scroll"
+                                               href="#13">Apply Algorithm</a>
+                                        </li>
+
+                                        <li style="list-style-type: circle;">
+                                            <a class="page-in-link scroll"
+                                               href="#14">Explore Results</a>
+                                        </li>
+
+                                </ul>
+                            </li>
+
                                <li>
                                    <h5 class="mt-2 text-lg-left">Contributing</h5>
                                    <ul>
 
                                            <li style="list-style-type: circle;">
                                                <a class="page-in-link scroll"
-                                                  href="#9">Github</a>
+                                                  href="#15">Github</a>
                                            </li>
 
                                    </ul>
@@ -176,83 +221,194 @@ you can select all the files or filter them by a certain percentage and download
                                    </div>
 
 
+                                </div>
+
+                                <div class="project-card-no-image">
+                                    <h3 style="font-size: 24px;">Topic Modeling</h3>
+     
+     
+                                        <div id="6">
+                                            <h1>Select Algorithm</h1>
+     <hr />
+     <p>Topic modeling is a statistical modeling technique used to uncover hidden thematic structures within a set of texts. It's commonly applied to large text corpora to identify the topics that documents contain and to categorize these documents by their topics. This method enables the extraction of meaningful patterns from vast amounts of data, improving the understanding of document content. It's especially favored in areas like digital libraries, information retrieval systems, and analysis of customer feedback.</p>
+     <hr />
+     <p>Select a project from the Projects tab, press Apply Topic Modeling and choose one of the algorithms you can apply:</p>
+     <ol>
+     <li>
+     <p>LDA</p>
+     </li>
+     <li>
+     <p>LSA</p>
+     </li>
+     <li>
+     <p>HDP</p>
+     </li>
+     <li>
+     <p>NMF</p>
+     </li>
+     <li>
+     <p>Word2Vec Kmeans</p>
+     </li>
+     <li>
+     <p>DistilBERT</p>
+     </li>
+     <li>
+     <p>BERTopic</p>
+     </li>
+     <li>
+     <p>Top2Vec</p>
+     </li>
+     </ol>
+                                        </div>
+     
+                                        <div id="7">
+                                            <h1>Apply Algorithm</h1>
+     <hr />
+     <p>After selecting one of the Topic Modeling algorithms, enter number of topics to create and click Run button. (except HDP and Top2Vec algorithm, it does not require topic number)</p>
+     <p>For LDA, LSA, NMF and Word2Vec models, to find optimum number of topic count, you can use Step section. Put start, end and step numbers to run and create coherence value graph for each topic number.</p>
+     <p>Example:</p>
+     <p>Start: 2 , End: 10, Step: 1 will calculate for 2, 3, 4, 5, 6, 7, 8, 9 topics and returns their coherence value as graph. Since it is running for multiple times, it can take a while.</p>
+     <p>Additionally, for BERTopic, model could be automatically applied without entering number of topics.</p>
+                                        </div>
+     
+                                        <div id="8">
+                                            <h1>Explore Results</h1>
+     <hr />
+     <p>After applying the algorithm, they are not lost and saved as a report, you do not need to re-apply them when you want to look at them. You can check History and click View.</p>
+     <p>There is 3 section in Topic Modeling report.</p>
+     <p>
+     <h3>Topic Word Distribution Table</h3>
+     </p>
+     <p>By default:</p>
+     <ul>
+     <li>
+     <p>Table is sorted by Topic Number, you can click the table header to sort them.</p>
+     </li>
+     <li>
+     <p>Topic names are from Topic 1 to Topic N, you can change it by clicking Edit Topic Names, after you rename it click Apply button.</p>
+     </li>
+     <li>
+     <p>In words column 10 keywords are showing respect to their importance, you can change it from 1 to 20, to do that click Filter and use slider.</p>
+     </li>
+     <li>
+     <p>Also, the topic Word distributions output could be downloaded as a PNG file by clicking "Download as PNG".</p>
+     </li>
+     </ul>
+     <p>You can preview and download files by clicking Count of Documents. When you click Download files button, it will download all of the documents related with that topic.</p>
+     <p>
+     <h3>Document Topic Distribution</h3>
+     </p>
+     <p>By selecting a document and clicking Add button, you can see topic distribution of that document. If you want to add all documents at once you can click Show All button.</p>
+     <p>
+     <h3>TSNE Graphs</h3>
+     </p>
+     <p>You can visualize document topic distributions by TSNE graphs 2D or 3D. To see the graphs click Load Graph button.</p>
+                                        </div>
+     
+
                            </div>
+
 
                            <div class="project-card-no-image">
-                               <h3 style="font-size: 24px;">Topic Modeling</h3>
+                            <h3 style="font-size: 24px;">Sentiment Analysis</h3>
+                            
+                            <div id="9">
+                                <h1>Select Algorithm</h1>
+                                <hr />
+                                <p>Sentiment analysis is a natural language processing (NLP) technique used to identify the emotional tone within texts. It automatically detects positive, negative, or neutral sentiments in various texts such as comments, social media posts, and product reviews.</p>
+                                <hr />
+                                <p>Select a project from the Projects tab, press Apply Sentiment Analysis and choose one of the algorithms you can apply:</p>
+                                <ol>
+                                    <li><p>VADER</p></li>
+                                    <li><p>Textblob</p></li>
+                                    <li><p>DistilBERT</p></li>
+                                    <li><p>RoBERTa</p></li>
+                                    <li><p>BERTurk</p></li>
+                                </ol>
+                            </div>
+                            
+                            <div id="10">
+                                <h1>Apply Algorithm</h1>
+                                <hr />
+                                <p>After selecting one of the Sentiment Analysis algorithms, enter the number of topics to create and click the Run button.</p>
+                            </div>
+                            
+                            <div id="11">
+                                <h1>Explore Results</h1>
+                                <hr />
+                                <p>After applying the algorithm, they are not lost and saved as a report, you do not need to re-apply them when you want to look at them. You can check History and click View.</p>
+                                <p>There are 4 sections in the Sentiment Analysis report.</p>
+                                
+                                <p><h3>Summary</h3></p>
+                                <p>In Summary; the algorithm, polarity value, and document counts are displayed.</p>
 
+                                     <p>Polarity value is a numerical measure in sentiment analysis that determines whether a text is positive (+), negative (-), or neutral (0).
+                                        Ranging from -1 to 1, this value indicates the intensity of sentiment, with negative values representing negative sentiment,
+                                         positive values indicating positive sentiment, and values close to zero meaning neutrality.</p>
+                                
+                                <p><h3>Bar Chart</h3></p>
+                                <p>A bar chart is visualized in order to see results.</p>
+                                
+                                <p><h3>Pie Chart</h3></p>
+                                <p>A pie chart is also visualized to see a different perspective of the results.</p>
+                                
+                                <p><h3>Detailed Scores</h3></p>
+                                <p>In each text, the scores of the text are displayed. Also, the scores can be downloaded as an Excel file by clicking the "Download Excel" button.</p>
+                            </div>
+                        </div>
 
-                                   <div id="6">
-                                       <h1>Select Algorithm</h1>
-<hr />
-<p>Select a project from the Projects tab, press Apply Topic Modeling and choose one of the algorithms you can apply:</p>
-<ol>
-<li>
-<p>LDA</p>
-</li>
-<li>
-<p>LSA</p>
-</li>
-<li>
-<p>HDP</p>
-</li>
-<li>
-<p>NMF</p>
-</li>
-<li>
-<p>Word2Vec Kmeans</p>
-</li>
-</ol>
-                                   </div>
-
-                                   <div id="7">
-                                       <h1>Apply Algorithm</h1>
-<hr />
-<p>After selecting one of the Topic Modeling algorithms, enter number of topics to create and click Run button. (except HDP algorithm, it does not require topic number)</p>
-<p>To find optimum number of topic count, you can use Step section. Put start, end and step numbers to run and create coherence value graph for each topic number.</p>
-<p>Example:</p>
-<p>Start: 2 , End: 10, Step: 1 will calculate for 2, 3, 4, 5, 6, 7, 8, 9 topics and returns their coherence value as graph. Since it is running for multiple times, it can take a while.</p>
-                                   </div>
-
-                                   <div id="8">
-                                       <h1>Explore Results</h1>
-<hr />
-<p>After applying the algorithm, they are not lost and saved as a report, you do not need to re-apply them when you want to look at them. You can check History and click View.</p>
-<p>There is 3 section in Topic Modelin report.</p>
-<ol>
-<li>Topic Word Distrubution Table</li>
-</ol>
-<p>By default:</p>
-<ul>
-<li>
-<p>Table is sorted by Topic Number, you can click the table header to sort them.</p>
-</li>
-<li>
-<p>Topic names are from Topic 1 to Topic N, you can change it by clicking Edit Topic Names, after you rename it click Apply button.</p>
-</li>
-<li>
-<p>In words column 10 keywords are showing respect to their importance, you can change it from 1 to 20, to do that click Filter and use slider.</p>
-</li>
-</ul>
-<p>You can preview and download files by clicking Count of Documents. When you click Download files button, it will download all of the documents related with that topic.</p>
-<ol>
-<li>Document Topic Distrubution</li>
-</ol>
-<p>By selecting a document and clicking Add button, you can see topic distrubution of that document. If you want to add all documents at once you can click Show All button.</p>
-<ol>
-<li>TSNE Graphs</li>
-</ol>
-<p>You can visualize document topic distrubutions by TSNE graphs 2D or 3D. To see the graphs click Load Graph button.</p>
-                                   </div>
-
-
-                           </div>
+                        <div class="project-card-no-image">
+                            <h3 style="font-size: 24px;">Summarization</h3>
+                            
+                            <div id="12">
+                                <h1>Select Algorithm</h1>
+                                <hr />
+                                <p>Summarization is the process of automatically condensing a large body of text into a shorter version while retaining its key information and meaning. It is a key application of Natural Language Processing (NLP), often used to help users quickly understand lengthy content.</p>
+                                <hr />
+                                <p>Select a project from the Projects tab, press Apply Summarization and choose one of the algorithms you can apply:</p>
+                                <ol>
+                                    <li><p>Pegasus</p></li>
+                                    <li><p>BART</p></li>
+                                    <li><p>T5</p></li>
+                                    <li><p>BRIO</p></li>
+                                    <li><p>DeepSeek</p></li>
+                                    <li><p>LexRank</p></li>
+                                </ol>
+                            </div>
+                            
+                            <div id="13">
+                                <h1>Apply Algorithm</h1>
+                                <hr />
+                                <p>After selecting one of the Summarization algorithms, enter the number of topics to create and click the Run button.</p>
+                            </div>
+                            
+                            <div id="14">
+                                <h1>Explore Results</h1>
+                                <hr />
+                                <p>After applying the algorithm, they are not lost and saved as a report, you do not need to re-apply them when you want to look at them. You can check History and click View.</p>
+                                <p>There are 3 sections in the Summarization report.</p>
+                                
+                                <p><h3>Generated Summary</h3></p>
+                                <p>In the generated summary, the summarized text is displayed.</p>
+                                
+                                <p><h3>BERT Score</h3></p>
+                                <p>BERTScore evaluates semantic similarity by using vector representations generated by the BERT model instead of directly comparing words. It focuses not only on word matches but also on the contextual meaning of words. This makes it a more reliable metric for tasks such as summarization, machine translation, and text generation.</p>
+                                
+                                <p><h3>ROUGE Scores</h3></p>
+                                <p>ROUGE scores measure the similarity between the generated text and the reference text.
+                                     ROUGE-1 (unigram), ROUGE-2 (bigram), and ROUGE-L (length-dependent matches) are evaluated using Precision (accuracy),
+                                      Recall (coverage), and F1-score (balance metric). A high Precision indicates that many words from the reference text appear in the generated text,
+                                       while a low Recall suggests that the generated text does not fully cover the information in the reference.</p>
+                            </div>
+                        </div>
+                        
+                        
 
                            <div class="project-card-no-image">
                                <h3 style="font-size: 24px;">Contributing</h3>
 
 
-                                   <div id="9">
+                                   <div id="15">
                                        <h1>Contrubuting</h1>
 <p>We love and support open source, if you want to contribute, you can send us your ideas or send a pull request via github.</p>
 <p>Github Repository: <a href="https://github.com/BilgiAILAB/bilgi-ai">https://github.com/BilgiAILAB/bilgi-ai</a></p>
@@ -277,7 +433,25 @@ you can select all the files or filter them by a certain percentage and download
                 position: fixed;
                 top: 100px;
                 bottom: 0;
+                overflow-y: auto;
             }
+            /* Custom scrollbar for WebKit browsers */
+        .fixed::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .fixed::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .fixed::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        .fixed::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
         }
     </style>
 {% endblock %}
