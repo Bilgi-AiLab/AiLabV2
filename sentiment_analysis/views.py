@@ -11,6 +11,7 @@ from sentiment_analysis.algorithms.textblob_web import textblob
 from sentiment_analysis.algorithms.distilbert_web import distilbert
 from sentiment_analysis.algorithms.roberta_web import roberta
 from sentiment_analysis.algorithms.berturk_web import berturk
+from sentiment_analysis.algorithms.absaberturk_web import absaberturk
 import pandas as pd
 from io import BytesIO
 
@@ -74,6 +75,9 @@ def apply_sentiment_algorithm(request, pk, algorithm):
         elif algorithm.lower() == "berturk":
             output = berturk(corpus=corpus)
 
+        elif algorithm.lower() == "absaberturk":
+            output = absaberturk(corpus=corpus)
+
         content.update(output)
         content["files"] = [file.filename() for file in files]
 
@@ -101,47 +105,96 @@ def view_sentiment_report(request, project_pk, algorithm, report_pk):
     negative_count = report.negative_doc_count()
     neutral_count = report.neutral_doc_count()
 
-    # Create a bar chart using Plotly
-    labels = ['Positive', 'Negative', 'Neutral']
-    values = [positive_count, negative_count, neutral_count]
+    if algorithm.lower() != "absaberturk":
+        # Create a bar chart using Plotly
+        labels = ['Positive', 'Negative', 'Neutral']
+        values = [positive_count, negative_count, neutral_count]
 
-    bar_chart = go.Figure(
-        data=[
-            go.Bar(
-                x=labels,
-                y=values,
-                text=values,
-                textposition='auto',
-                marker=dict(color=['#28a745', '#dc3545', '#ffc107'])  # Green, Red, Yellow
-            )
+        bar_chart = go.Figure(
+            data=[
+                go.Bar(
+                    x=labels,
+                    y=values,
+                    text=values,
+                    textposition='auto',
+                    marker=dict(color=['#28a745', '#dc3545', '#ffc107'])  # Green, Red, Yellow
+                )
+            ]
+        )
+        bar_chart.update_layout(
+            title="Sentiment Analysis Results",
+            xaxis_title="Sentiment",
+            yaxis_title="Document Count",
+            template="plotly_white"
+        )
+
+        # Convert Bar Chart to JSON
+        bar_chart_json = json.dumps(bar_chart, cls=PlotlyJSONEncoder)
+
+        # Create a pie chart
+        pie_chart = go.Figure(
+            data=[
+                go.Pie(
+                    labels=labels,
+                    values=values,
+                    textinfo='percent+label',
+                    marker=dict(colors=['#28a745', '#dc3545', '#ffc107'])  # Green, Red, Yellow
+                )
+            ]
+        )
+        pie_chart.update_layout(title="Sentiment Distribution")
+
+        # Convert Pie Chart to JSON
+        pie_chart_json = json.dumps(pie_chart, cls=PlotlyJSONEncoder)
+    
+    elif algorithm.lower() == "absaberturk":
+        # Create a bar chart using Plotly
+        labels = ['Happiness', 'Sadness', 'Fear', 'Anger', 'Disgust', 'Surprise']
+        values = [
+            report.happiness_doc_count(),
+            report.sadness_doc_count(),
+            report.fear_doc_count(),
+            report.anger_doc_count(),
+            report.disgust_doc_count(),
+            report.surprise_doc_count()
         ]
-    )
-    bar_chart.update_layout(
-        title="Sentiment Analysis Results",
-        xaxis_title="Sentiment",
-        yaxis_title="Document Count",
-        template="plotly_white"
-    )
+
+        bar_chart = go.Figure(
+            data=[
+                go.Bar(
+                    x=labels,
+                    y=values,
+                    text=values,
+                    textposition='auto',
+                    marker=dict(color=['#28a745', '#dc3545', '#ffc107', '#6c757d', '#17a2b8', '#6610f2'])  # Custom colors for each emotion
+                )
+            ]
+        )
+        bar_chart.update_layout(
+            title="Emotion Analysis Results",
+            xaxis_title="Emotion",
+            yaxis_title="Document Count",
+            template="plotly_white"
+        )
 
     # Convert Bar Chart to JSON
-    bar_chart_json = json.dumps(bar_chart, cls=PlotlyJSONEncoder)
+        bar_chart_json = json.dumps(bar_chart, cls=PlotlyJSONEncoder)
 
     # Create a pie chart
-    pie_chart = go.Figure(
-        data=[
-            go.Pie(
-                labels=labels,
-                values=values,
-                textinfo='percent+label',
-                marker=dict(colors=['#28a745', '#dc3545', '#ffc107'])  # Green, Red, Yellow
-            )
-        ]
-    )
-    pie_chart.update_layout(title="Sentiment Distribution")
+        pie_chart = go.Figure(
+            data=[
+                go.Pie(
+                    labels=labels,
+                    values=values,
+                    textinfo='percent+label',
+                    marker=dict(colors=['#28a745', '#dc3545', '#ffc107', '#6c757d', '#17a2b8', '#6610f2'])  # Custom colors for each emotion
+                )
+            ]
+        )
+        pie_chart.update_layout(title="Emotion Distribution")
 
     # Convert Pie Chart to JSON
-    pie_chart_json = json.dumps(pie_chart, cls=PlotlyJSONEncoder)
-
+        pie_chart_json = json.dumps(pie_chart, cls=PlotlyJSONEncoder)
     # Add data to the content dictionary
     content = {
         'project': project,

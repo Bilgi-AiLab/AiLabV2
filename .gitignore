@@ -4,4 +4,6 @@ trmodel
 venv/
 trained_distilbert/
 tokenizer_distilbert/
+fine_tuned_berturk/
+fine_tuned_tokenizer_berturk/
 db.sqlite3

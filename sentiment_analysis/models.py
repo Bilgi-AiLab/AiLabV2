@@ -44,3 +44,39 @@ class Report(models.Model):
             return self.get_output()["detailed_scores"]
         except KeyError:
             return None
+        
+    def happiness_doc_count(self):
+        try:
+            return self.get_output()["happiness_doc_count"]
+        except KeyError:
+            return None
+        
+    def sadness_doc_count(self):
+        try:
+            return self.get_output()["sadness_doc_count"]
+        except KeyError:
+            return None
+        
+    def fear_doc_count(self):
+        try:
+            return self.get_output()["fear_doc_count"]
+        except KeyError:
+            return None
+        
+    def anger_doc_count(self):
+        try:
+            return self.get_output()["anger_doc_count"]
+        except KeyError:
+            return None
+    
+    def disgust_doc_count(self):
+        try:
+            return self.get_output()["disgust_doc_count"]
+        except KeyError:
+            return None
+        
+    def surprise_doc_count(self):
+        try:
+            return self.get_output()["surprise_doc_count"]
+        except KeyError:
+            return None

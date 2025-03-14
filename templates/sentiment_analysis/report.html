@@ -7,6 +7,7 @@
 {% endblock %}
 {% block content %}
 <body>
+    {% if algorithm|lower != 'absaberturk' %}
     <div class="container mt-5">
         
 
@@ -68,7 +69,75 @@
                 </tbody>
             </table>
         </div>
-    
+        {% endif %}
+        {% if algorithm|lower == 'absaberturk' %}
+    <div class="container mt-5">
+        
+
+        <h1 class="mb-4">{{ title }}</h1>
+
+        <!-- Summary -->
+        <div class="mb-4">
+            <h3>Summary</h3>
+            <p><strong>Algorithm:</strong> {{ algorithm|title }}</p>
+            <p><strong>Confidence Score:</strong> {{ report.polarity_value }}</p>
+            <p>
+                <strong>Document Count:</strong>
+                Happiness: {{ report.happiness_doc_count }},
+                Sadness: {{ report.sadness_doc_count }},
+                Fear: {{ report.fear_doc_count }},
+                Anger: {{ report.anger_doc_count }},
+                Disgust: {{ report.disgust_doc_count }},
+                Surprise: {{ report.surprise_doc_count }}
+            </p>
+        </div>
+
+        <!-- Charts -->
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Bar Chart</h4>
+                <div id="bar-chart"></div>
+            </div>
+            <div class="col-md-6">
+                <h4>Pie Chart</h4>
+                <div id="pie-chart"></div>
+            </div>
+        </div>
+
+        <!-- Detailed Scores -->
+        <div class="mt-5">
+            <a href="{% url 'download_excel' report.project.id report.algorithm report.id %}" class="btn btn-success mb-3" id="downloadLink">Download Excel</a>
+            <h3>Detailed Scores</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Text</th>
+                        <th>Confidence</th>
+                        <th>Sentiment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for score in report.detailed_scores %}
+                    <tr class="
+                        {% if score.sentiment|lower == 'happy' %}table-success
+                        {% elif score.sentiment|lower == 'surprised' %}table-primary
+                        {% elif score.sentiment|lower == 'fear' %}table-danger
+                        {% elif score.sentiment|lower == 'anger' %}table-warning
+                        {% elif score.sentiment|lower == 'sadness' %}table-secondary
+                        {% elif score.sentiment|lower == 'disgust' %}table-info
+                        {% else %}table-light{% endif %}">
+         
+                            <td>{{ score.id }}</td>
+                            <td>{{ score.text }}</td>
+                            <td>{{ score.compound }}</td>
+                            <td>{{ score.sentiment }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
 </body>
 {% endblock %}
 {% block script %}
