@@ -149,7 +149,7 @@ def view_sentiment_report(request, project_pk, algorithm, report_pk):
     
     elif algorithm.lower() == "absaberturk":
         # Create a bar chart using Plotly
-        labels = ['Happiness', 'Sadness', 'Fear', 'Anger', 'Disgust', 'Surprise']
+        labels = ['Happy', 'Sadness', 'Fear', 'Anger', 'Disgust', 'Surprise']
         values = [
             report.happiness_doc_count(),
             report.sadness_doc_count(),

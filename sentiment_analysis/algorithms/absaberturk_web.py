@@ -1,14 +1,14 @@
 from transformers import pipeline, AutoModelForSequenceClassification, AutoTokenizer
-from sentiment_analysis.algorithms.preprocess import preprocess_text
+from sentiment_analysis.algorithms.preprocess_absa import preprocess_text
 import re
 
 def absaberturk(corpus):
     
     model = AutoModelForSequenceClassification.from_pretrained("./fine_tuned_berturk")
     tokenizer = AutoTokenizer.from_pretrained("./fine_tuned_tokenizer_berturk")
-    sentiment_analyzer = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer) #0.93 accuracy, 0.22 validation loss, 0.15 training loss, trained with TREMO dataset
+    sentiment_analyzer = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer) #0.93 accuracy for validation set, 0.85 accuracy for test set, 0.21 validation loss, 0.2 training loss, trained with TREMO dataset, 2 epoch, 2e-5 learning rate
     
-    happines_doc_count = 0
+    happiness_doc_count = 0
     sadness_doc_count = 0
     fear_doc_count = 0
     anger_doc_count = 0
@@ -27,12 +27,11 @@ def absaberturk(corpus):
         score = result['score'] 
         polarity = 0
         sentiment = "Unknown" 
-        print(f"label: {label}")
-        print(f"Score: {score}")
+       
         if label == "LABEL_0":
             polarity = score
             sentiment = "Happy"
-            happines_doc_count += 1
+            happiness_doc_count += 1
         elif label == "LABEL_3":
             polarity = score
             sentiment = "Sadness"
@@ -70,7 +69,7 @@ def absaberturk(corpus):
     output = {
         "filecount": len(corpus),
         "polarity_value": round(average_polarity_score, 4),
-        "happines_doc_count": happines_doc_count,
+        "happiness_doc_count": happiness_doc_count,
         "sadness_doc_count": sadness_doc_count,
         "fear_doc_count": fear_doc_count,
         "anger_doc_count": anger_doc_count,
