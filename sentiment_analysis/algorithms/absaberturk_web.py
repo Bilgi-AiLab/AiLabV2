@@ -6,7 +6,7 @@ def absaberturk(corpus):
     
     model = AutoModelForSequenceClassification.from_pretrained("./fine_tuned_berturk")
     tokenizer = AutoTokenizer.from_pretrained("./fine_tuned_tokenizer_berturk")
-    sentiment_analyzer = pipeline("sentiment-analysis", model=model, tokenizer=tokenizer) #0.93 accuracy for validation set, 0.85 accuracy for test set, 0.21 validation loss, 0.2 training loss, trained with TREMO dataset, 2 epoch, 2e-5 learning rate
+    sentiment_analyzer = pipeline("text-classification", model=model, tokenizer=tokenizer) #0.93 accuracy for validation set, 0.85 accuracy for test set, 0.21 validation loss, 0.2 training loss, trained with TREMO dataset, 2 epoch, 2e-5 learning rate
     
     happiness_doc_count = 0
     sadness_doc_count = 0
@@ -18,7 +18,7 @@ def absaberturk(corpus):
 
     detailed_scores = []
     
-    #corpus = [s.strip() for s in re.split(r'\s*&\s*', corpus) if s.strip()]
+    corpus = [s.strip() for s in re.split(r'\s*&\s*', corpus) if s.strip()]
     
     for i, text in enumerate(corpus):
         cleaned_text = preprocess_text(text)
