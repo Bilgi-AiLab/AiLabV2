@@ -94,6 +94,9 @@ def apply_topic_algorithm(request, pk, algorithm):
             except:
                 n_topic = str(request.POST['n_topic'])
 
+        if 'is_turkish' in request.POST:
+            is_turkish = str(request.POST['is_turkish'])
+
         if algorithm.lower() == 'lda':
             output = LDA(corpus, n_topic)
 
@@ -110,13 +113,13 @@ def apply_topic_algorithm(request, pk, algorithm):
             output = w2v_kmeans(corpus, n_topic)
 
         elif algorithm.lower() == 'bertopic':
-            output = bertopic(corpus, n_topic)
+            output = bertopic(corpus, n_topic, is_turkish=is_turkish)
         
         elif algorithm.lower() == 'distilbert':
             output = distilbert(corpus=corpus, n_topic=n_topic)
 
         elif algorithm.lower() == 'top2vec':
-            output = top2vec(corpus=corpus)
+            output = top2vec(corpus=corpus, is_turkish=is_turkish)
 
         content.update(output)
         content["files"] = [file.filename() for file in files]

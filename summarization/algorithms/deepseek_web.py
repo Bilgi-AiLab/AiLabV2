@@ -18,7 +18,7 @@ def deepseek(text):
     messages=[
         {
             "role": "system",
-            "content": "Your task is to summarize the given text and only to return the generated summary to the user."
+            "content": "Your task is to summarize the given text on its own language and only to return the generated summary to the user."
         },
         {
             "role": "user",

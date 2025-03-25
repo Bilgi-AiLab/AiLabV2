@@ -21,6 +21,15 @@
                                 </fieldset>
                             </div>
                         {% endif %}
+                        {% if algorithm|lower == 'top2vec' %}
+                        <div class="form-group">
+                            <label for="is_turkish">Enable Turkish:</label>
+                            <select name="is_turkish" id="is_turkish" class="form-control">
+                                <option value="True">True</option>
+                                <option value="False">False</option>
+                            </select>
+                        </div>
+                        {% endif %}
                         {% if algorithm|lower == 'w2v-kmeans' %}
                             <div class="form-group">
                                 <fieldset>
@@ -40,6 +49,13 @@
                                            class="form-control" name="n_topic"/>
 
                                 </fieldset>
+                                <div class="form-group">
+                                    <label for="is_turkish">Enable Turkish:</label>
+                                    <select name="is_turkish" id="is_turkish" class="form-control">
+                                        <option value="True">True</option>
+                                        <option value="False">False</option>
+                                    </select>
+                                </div>
                             </div>
                         {% endif %}
                         {% if algorithm|lower == 'distilbert' %}
@@ -67,6 +83,14 @@
                             <fieldset>
                                 <input type="hidden" value="auto" name="n_topic"/>
                             </fieldset>
+                            
+                        </div>
+                        <div class="form-group">
+                            <label for="is_turkish">Enable Turkish:</label>
+                            <select name="is_turkish" id="is_turkish" class="form-control">
+                                <option value="True">True</option>
+                                <option value="False">False</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit">Run</button>

@@ -4,6 +4,8 @@ import plotly.graph_objects as go
 from umap import UMAP
 from topic_modelling.algorithms import distributions, preprocess_bert, preprocess, coherence, topic_distance
 from gensim.corpora import Dictionary
+import re
+from sentence_transformers import SentenceTransformer
 
 '''
 -When you need to capture nuanced, contextual relationships in text data.
@@ -46,7 +48,7 @@ def bertopic_coherence(corpus, start, end, step):
     fig = topic_model.visualize_barchart()
     return fig
 
-def bertopic(corpus, n_topic):
+def bertopic(corpus, n_topic, is_turkish="False"):
     cleaned_data, data_tokens, id2word, corpus = preprocess_bert.preprocess(corpus=corpus)
     if not cleaned_data:
         raise ValueError("The cleaned data is empty. Please check the preprocessing steps.")
@@ -54,7 +56,13 @@ def bertopic(corpus, n_topic):
     doc_number = len(data_tokens)
     print(f"Documents: {doc_number}")
     umap_model = UMAP(n_neighbors=15, min_dist=0.05, n_components=2, random_state=42)
-    topic_model = BERTopic(calculate_probabilities=True, min_topic_size=10, umap_model=umap_model, nr_topics=n_topic, top_n_words=15, zeroshot_min_similarity=0.85, embedding_model='paraphrase-MiniLM-L6-v2')
+
+    if is_turkish == "True":
+        embedding_model = SentenceTransformer("dbmdz/bert-base-turkish-cased")
+        topic_model = BERTopic(language="turkish", calculate_probabilities=True, min_topic_size=5, umap_model=umap_model, nr_topics=n_topic, top_n_words=15, zeroshot_min_similarity=0.85, embedding_model=embedding_model)
+    else:
+        topic_model = BERTopic(calculate_probabilities=True, min_topic_size=5, umap_model=umap_model, nr_topics=n_topic, top_n_words=15, zeroshot_min_similarity=0.85, embedding_model='paraphrase-MiniLM-L6-v2')
+
     topics, probs = topic_model.fit_transform(cleaned_data)
     
     #coherence_model = coherence.coherence_value(model=topic_model, tokens=data_tokens, dictionary=id2word)

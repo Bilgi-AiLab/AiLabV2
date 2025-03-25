@@ -17,12 +17,14 @@ def absaberturk(corpus):
     polarity_score = 0
 
     detailed_scores = []
-    
-    corpus = [s.strip() for s in re.split(r'\s*&\s*', corpus) if s.strip()]
+
+    #tmp = " ".join(corpus)
+    #corpus = [s.strip() for s in re.split(r'\s*&\s*', tmp) if s.strip()]
+    #corpus = [re.sub(r'Yorum\s+\d+\s*\([^)]*\):\s*', '', s) for s in corpus]
     
     for i, text in enumerate(corpus):
         cleaned_text = preprocess_text(text)
-        result = sentiment_analyzer(cleaned_text)[0] 
+        result = sentiment_analyzer(cleaned_text, truncation=True)[0] 
         label = result['label'] 
         score = result['score'] 
         polarity = 0

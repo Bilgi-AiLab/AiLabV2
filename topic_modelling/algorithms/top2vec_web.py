@@ -1,9 +1,10 @@
 from top2vec import Top2Vec
 from gensim.models import CoherenceModel
 from topic_modelling.algorithms import preprocess_top2vec
+from sentence_transformers import SentenceTransformer
 import numpy as np
 
-def top2vec(corpus):
+def top2vec(corpus, is_turkish="False"):
     cleaned_data, data_tokens, id2word, corpus = preprocess_top2vec.preprocess(corpus=corpus)
     if not cleaned_data:
         raise ValueError("The cleaned data is empty. Please check the preprocessing steps.")
@@ -11,7 +12,11 @@ def top2vec(corpus):
     doc_ids = [i for i in range(len(cleaned_data))]  
     
     print("Fitting Top2Vec model...")
-    model = Top2Vec(documents=cleaned_data, embedding_model='all-MiniLM-L6-v2', speed='deep-learn', workers=4, document_ids=doc_ids, contextual_top2vec=True, min_count=5)
+    if is_turkish == "True":
+        embedding_model = SentenceTransformer("dbmdz/bert-base-turkish-cased")
+        model = Top2Vec(documents=cleaned_data, embedding_model=embedding_model, speed='deep-learn', workers=4, document_ids=doc_ids, contextual_top2vec=True, min_count=5)
+    else:
+        model = Top2Vec(documents=cleaned_data, embedding_model='all-MiniLM-L6-v2', speed='deep-learn', workers=4, document_ids=doc_ids, contextual_top2vec=True, min_count=5)
     
     topics_words, word_scores, topic_nums = model.get_topics()
     topic_sizes, topic_nums = model.get_topic_sizes()
