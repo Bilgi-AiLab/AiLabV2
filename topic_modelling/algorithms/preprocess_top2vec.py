@@ -10,7 +10,7 @@ import contractions
 
 nltk.download("stopwords")
 
-def preprocess(corpus):
+def preprocess(corpus, is_turkish):
     file = open(f"{os.path.dirname(__file__)}/turkce-stop-words.txt")
     stops = [line.strip() for line in file.readlines()]
     replace_with_space = re.compile('[/(){}\[\]\|@,;]')
@@ -38,7 +38,8 @@ def preprocess(corpus):
         text = remove_urls.sub('', text)
         text = remove_mentions_and_hashtags.sub('', text)
         #text = remove_hastags.sub('', text)
-        text = contractions.fix(text)
+        if is_turkish == "False":
+            text = contractions.fix(text)
         text = ''.join([x for x in text if x in valid_characters])
         lemmatizer = WordNetLemmatizer()
         text = ' '.join([lemmatizer.lemmatize(word) for word in text.split()])
