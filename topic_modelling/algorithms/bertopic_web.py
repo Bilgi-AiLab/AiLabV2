@@ -112,7 +112,10 @@ def bertopic(corpus, n_topic, is_turkish="False"):
     
     bert_topics = [[word[0] for word in topic] for topic in word_distributions]
     
-    coherence_model = CoherenceModel(topics=bert_topics, texts=data_tokens, dictionary=id2word, coherence='c_v').get_coherence()
+    try:
+        coherence_model = CoherenceModel(topics=bert_topics, texts=data_tokens, dictionary=id2word, coherence='c_v').get_coherence()
+    except Exception:
+        coherence_model = 0
     
     output = {
         "filecount": doc_number,
