@@ -11,7 +11,7 @@ from sentiment_analysis.algorithms.textblob_web import textblob
 from sentiment_analysis.algorithms.distilbert_web import distilbert
 from sentiment_analysis.algorithms.roberta_web import roberta
 from sentiment_analysis.algorithms.berturk_web import berturk
-from sentiment_analysis.algorithms.absaberturk_web import absaberturk
+from sentiment_analysis.algorithms.emotionberturk_web import emotionberturk
 import pandas as pd
 from io import BytesIO
 
@@ -75,8 +75,8 @@ def apply_sentiment_algorithm(request, pk, algorithm):
         elif algorithm.lower() == "berturk":
             output = berturk(corpus=corpus)
 
-        elif algorithm.lower() == "absaberturk":
-            output = absaberturk(corpus=corpus)
+        elif algorithm.lower() == "emotionberturk":
+            output = emotionberturk(corpus=corpus)
 
         content.update(output)
         content["files"] = [file.filename() for file in files]
@@ -105,7 +105,7 @@ def view_sentiment_report(request, project_pk, algorithm, report_pk):
     negative_count = report.negative_doc_count()
     neutral_count = report.neutral_doc_count()
 
-    if algorithm.lower() != "absaberturk":
+    if algorithm.lower() != "emotionberturk":
         # Create a bar chart using Plotly
         labels = ['Positive', 'Negative', 'Neutral']
         values = [positive_count, negative_count, neutral_count]
@@ -147,7 +147,7 @@ def view_sentiment_report(request, project_pk, algorithm, report_pk):
         # Convert Pie Chart to JSON
         pie_chart_json = json.dumps(pie_chart, cls=PlotlyJSONEncoder)
     
-    elif algorithm.lower() == "absaberturk":
+    elif algorithm.lower() == "emotionberturk":
         # Create a bar chart using Plotly
         labels = ['Happy', 'Sadness', 'Fear', 'Anger', 'Disgust', 'Surprise']
         values = [
