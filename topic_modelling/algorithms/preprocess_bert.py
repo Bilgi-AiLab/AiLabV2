@@ -22,6 +22,7 @@ def preprocess(corpus, is_turkish):
     stopwords.extend(stops)
     remove_3chars = re.compile(r'\b\w{1,3}\b')
 
+
     def get_synonym(word):
         synonyms = wordnet.synsets(word)
         if synonyms:
@@ -42,7 +43,8 @@ def preprocess(corpus, is_turkish):
             text = contractions.fix(text)
         text = ''.join([x for x in text if x in valid_characters])
         lemmatizer = WordNetLemmatizer()
-        text = ' '.join([lemmatizer.lemmatize(word) for word in text.split()])
+        if is_turkish == "False":
+            text = ' '.join([lemmatizer.lemmatize(word) for word in text.split()])
         lower_map = {
             ord(u'I'): u'ı',
             ord(u'İ'): u'i',
@@ -57,8 +59,9 @@ def preprocess(corpus, is_turkish):
         text = remove_symbols1.sub('', text)
         text = remove_3chars.sub('', text)
         text = ' '.join([word for word in text.split() if word not in stopwords])
-        text = ' '.join([get_synonym(word) for word in text.split()])
-        text = emoji.replace_emoji(text, replace=' ')
+        if is_turkish == "False":
+            text = ' '.join([get_synonym(word) for word in text.split()])
+            text = emoji.replace_emoji(text, replace=' ')
         return text
 
     # First pass: Clean the text

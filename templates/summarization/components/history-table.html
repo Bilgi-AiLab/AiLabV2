@@ -14,7 +14,7 @@
                 <tr>
                     <td class="text-uppercase">{{ report.algorithm }}</td>
                     
-                    <td>{{ report.polarity_value|make_list|slice:':6'|join:'' }}</td>
+                    <td>{{ report.bert_score|make_list|slice:':6'|join:'' }}</td>
 
                     <td>{{ report.date }}</td>
                     <td>
