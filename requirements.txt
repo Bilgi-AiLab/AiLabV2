@@ -59,6 +59,7 @@ scipy
 sentencepiece
 six
 smart-open
+snowballstemmer
 sumy
 sqlparse
 textblob

@@ -7,6 +7,7 @@ import os
 from nltk.corpus import wordnet
 import emoji
 import contractions
+import snowballstemmer
 
 nltk.download("stopwords")
 
@@ -41,9 +42,15 @@ def preprocess(corpus, is_turkish):
         #text = remove_hastags.sub('', text)
         if is_turkish == "False":
             text = contractions.fix(text)
+
         text = ''.join([x for x in text if x in valid_characters])
-        lemmatizer = WordNetLemmatizer()
+
+        if is_turkish == "True":
+            stemmer = snowballstemmer.stemmer('turkish')
+            text = ' '.join(stemmer.stemWords(text.split()))
+            
         if is_turkish == "False":
+            lemmatizer = WordNetLemmatizer()
             text = ' '.join([lemmatizer.lemmatize(word) for word in text.split()])
         lower_map = {
             ord(u'I'): u'ı',
