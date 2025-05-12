@@ -14,7 +14,7 @@ from topic_modelling.algorithms.lsa_web import LSA, lsa_optimum_coherence
 from topic_modelling.algorithms.nmf_web import NMF, nmf_optimum_coherence
 from topic_modelling.algorithms.topic_graph import tsne_graph_2d, tsne_graph_3d
 from topic_modelling.models import Report
-from topic_modelling.algorithms.bertopic_web import bertopic_coherence, bertopic
+from topic_modelling.algorithms.bertopic_web import bertopic
 from topic_modelling.algorithms.distilbert_web import distilbert
 from topic_modelling.algorithms.top2vec_web import top2vec
 
@@ -79,9 +79,7 @@ def apply_topic_algorithm(request, pk, algorithm):
 
             elif algorithm.lower() == 'w2v-kmeans':
                 fig = kmeans_optimum_value(corpus, start, end, step)
-
-            elif algorithm.lower() == 'bertopic':
-                fig = bertopic_coherence(corpus, start, end, step)    
+    
 
             content["data"] = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
 

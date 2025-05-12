@@ -15,40 +15,6 @@ from sentence_transformers import SentenceTransformer
 data-driven approach to identify themes in your data.
 '''
 
-def bertopic_coherence(corpus, start, end, step):
-    cleaned_data, data_tokens, id2word, corpus = preprocess_bert.preprocess(corpus=corpus)
-
-    if not cleaned_data:
-        raise ValueError("The cleaned data is empty. Please check the preprocessing steps.")
-
-    coherence_values = []
-    n_topic_sizes = range(start, end + 1, step)
-
-    for n_topic_size in n_topic_sizes:
-        umap_model = UMAP(n_neighbors=5, min_dist=0.1, n_components=2, random_state=42)
-        topic_model = BERTopic(calculate_probabilities=True, min_topic_size=2, umap_model=umap_model, nr_topics=n_topic_size, top_n_words=8, zeroshot_min_similarity=1.1, embedding_model='all-MiniLM-L6-v2')
-        topics_, probs = topic_model.fit_transform(cleaned_data)
-        topics = topic_model.reduce_outliers(cleaned_data, topics_, probabilities=probs, strategy="probabilities")
-        if not set(topics):
-            raise ValueError(f"No topics generated for min_topic_size={n_topic_size}.")
-        
-        topics_list = topic_model.get_topics()
-        if -1 in topics_list:
-            del topics_list[-1]
-
-        word_distributions = []
-        for topic_id, topic_words in topics_list.items():
-            filtered_words = [(word, score) for word, score in topic_words if word and word.strip()]
-            if filtered_words:
-                word_distributions.append(filtered_words)
-   
-        bert_topics = [[word[0] for word in topic] for topic in word_distributions]
-        coherence_model = CoherenceModel(topics=bert_topics, texts=data_tokens, dictionary=id2word, coherence='c_v').get_coherence()
-        coherence_values.append(coherence_model)
-
-    fig = topic_model.visualize_barchart()
-    return fig
-
 def bertopic(corpus, n_topic, is_turkish="False"):
     cleaned_data, data_tokens, id2word, corpus = preprocess_bert.preprocess(corpus=corpus, is_turkish=is_turkish)
     if not cleaned_data:
@@ -56,12 +22,15 @@ def bertopic(corpus, n_topic, is_turkish="False"):
 
     doc_number = len(data_tokens)
     print(f"Documents: {doc_number}")
-    umap_model = UMAP(n_neighbors=15, min_dist=0.05, n_components=2, random_state=42)
 
+    #umap_model = UMAP(n_neighbors=15, min_dist=0.05, n_components=2, random_state=42)
     
-    topic_model = BERTopic(calculate_probabilities=True, min_topic_size=5, umap_model=umap_model, nr_topics=n_topic, top_n_words=15, zeroshot_min_similarity=0.85, embedding_model='paraphrase-MiniLM-L6-v2')
+    model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+    embeddings = model.encode(cleaned_data, batch_size=64, show_progress_bar=True)
+
+    topic_model = BERTopic(calculate_probabilities=True, min_topic_size=5, umap_model=None, nr_topics=n_topic, top_n_words=15, zeroshot_min_similarity=0.85, embedding_model=None)
     
-    topics, probs = topic_model.fit_transform(cleaned_data)
+    topics, probs = topic_model.fit_transform(cleaned_data, embeddings=embeddings)
     
     #coherence_model = coherence.coherence_value(model=topic_model, tokens=data_tokens, dictionary=id2word)
     valid_topics = {topic for topic in set(topics) if topic != -1}
