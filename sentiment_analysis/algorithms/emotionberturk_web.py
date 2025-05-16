@@ -18,9 +18,10 @@ def emotionberturk(corpus):
 
     detailed_scores = []
 
-    #tmp = " ".join(corpus)
-    #corpus = [s.strip() for s in re.split(r'\s*&\s*', tmp) if s.strip()]
-    #corpus = [re.sub(r'Yorum\s+\d+\s*\([^)]*\):\s*', '', s) for s in corpus]
+    #pattern = r"Yorum \d+ \([^)]+\): (.*?)(?=&|$)"
+    #corpus = str(corpus)
+    #matches = re.findall(pattern, corpus, re.DOTALL)
+    #corpus = [match.strip() for match in matches]
     
     for i, text in enumerate(corpus):
         cleaned_text = preprocess_text(text)
