@@ -47,7 +47,7 @@ CMPE 492 Senior Design Project
 
 2020
 
-Project is updated by
+Project is updated by (2025)
 
 Kubilay Kürtür
 
