@@ -14,7 +14,7 @@ def chatbot(request):
 
             client = OpenAI(
                 base_url="https://openrouter.ai/api/v1",
-                api_key="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",
+                api_key="api-key",
             )
 
             completion = client.chat.completions.create(
