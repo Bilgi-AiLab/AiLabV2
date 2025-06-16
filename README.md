@@ -19,7 +19,7 @@ python manage.py collectstatic
 Note: If you want to add new features, add your feature in thesis_django settings.py and urls.py, then do these afterwards--> python manage.py makemigrations <the_feature> and then
 python manage.py migrate <the_feature>
 ```
-4. Download the fine-tuned models and trmodel from this drive link: https://drive.google.com/drive/folders/1wAAvHY-QNLVMnuc7i1I1IkY2_qm7SDV8?usp=sharing and add it on the project folder. (Also if you want to be able to upload lots of files to a project, you are gonna have to configure your venv!)
+4. Download the fine-tuned models and trmodel from this drive link: https://drive.google.com/drive/folders/1wAAvHY-QNLVMnuc7i1I1IkY2_qm7SDV8?usp=sharing and add it on the project folder. (Also if you want to be able to upload lots of files to a project, you are gonna have to configure your venv!) You can also find our fine-tuned berturk using this "kubi565/emotion-berturk-turkish" from huggingface.
 You can run the server now! 
 ```
 python manage.py runserver
